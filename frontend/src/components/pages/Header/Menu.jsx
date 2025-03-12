@@ -1,0 +1,27 @@
+// import clsx from "clsx";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { NavItem } from ".";
+
+const Menu = ({ links }) => {
+  return (
+    <ul className="menu menu-horizontal px-1">
+      {links.map((link) => (
+        <li key={link.id}>
+          {link.sub ? (
+            <details>
+              <summary className="text-lg">{link.lable}</summary>
+              <ul className="p-2 min-w-24 bg-base-100">
+                <Menu links={link.sub} />
+              </ul>
+            </details>
+          ) : (
+            <NavItem lable={link.lable} path={link.path} />
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default Menu;
