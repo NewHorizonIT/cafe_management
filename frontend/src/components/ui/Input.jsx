@@ -1,14 +1,14 @@
 import clsx from "clsx";
 import React from "react";
 
-const Input = ({ size, icon }) => {
+const Input = ({ size, icon, placeholder, type }) => {
   return (
     <label className="input">
       {icon ? icon : <></>}
       <input
-        type="search"
+        type={type}
         required
-        placeholder="Search"
+        placeholder={placeholder}
         className={clsx("input focus:outline-none", {
           "input-xs": size === "xs",
           "input-md": size === "md",
