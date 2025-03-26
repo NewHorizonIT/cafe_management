@@ -1,0 +1,26 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: db_cafe_management
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_cafe_management
+      MYSQL_USER: horizon
+      MYSQL_PASSWORD: cafemanagement
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  #Khong duoc dong vao service nay
+  # api:
+  #   build: .
+  #   container_name: api_cafe_management
+  #   restart: always
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - mysql
+volumes:
+  mysql_data:
