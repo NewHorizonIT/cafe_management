@@ -2,7 +2,7 @@ import React from "react";
 import Container from "./Container";
 import Button from "@/components/ui/Button";
 import { Menu } from "@/components/pages/Header";
-import links from "@/constants/link";
+import links from "@/constants/paths";
 import useAuthStore from "@/store/useAuthStore";
 import { Avatar, Input, ToggleTheme } from "../ui";
 import { CartIcon, SearchIcon } from "@/components/icons";

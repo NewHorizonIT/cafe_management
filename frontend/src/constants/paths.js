@@ -1,4 +1,4 @@
-const links = [
+const paths = [
   {
     id: 1,
     lable: "Trang chu",
@@ -28,4 +28,4 @@ const links = [
   },
 ];
 
-export default links;
+export default paths;
