@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 const useAuthStore = create((set) => ({
-  isLogin: false,
+  isLogin: true,
   data: {},
   role: "",
   setIsLogin: (val) => set({ isLogin: val }),
