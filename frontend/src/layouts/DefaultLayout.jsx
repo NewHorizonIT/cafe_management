@@ -1,4 +1,5 @@
-import { Header } from "@/components/layout";
+import { Footer, Header } from "@/components/layout";
+import { links, socialLinks } from "@/constants/footer";
 import React from "react";
 import { Outlet } from "react-router-dom";
 
@@ -7,6 +8,11 @@ const DefaultLayout = () => {
     <div className="bg-base-100 min-h-screen h-max">
       <Header />
       <Outlet />
+      <Footer
+        links={links}
+        socialLinks={socialLinks}
+        logo={<h1 className="font-playwrite text-4xl">MyCoffe</h1>}
+      />
     </div>
   );
 };
