@@ -1,4 +1,4 @@
-// OrderRepository.java
+// OrderRepository
 package com.springboot.springboot.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
