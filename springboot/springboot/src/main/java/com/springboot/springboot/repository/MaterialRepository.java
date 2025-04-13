@@ -1,4 +1,4 @@
-// MaterialRepository.java
+// MaterialRepository
 package com.springboot.springboot.repository;
 
 // Ensure the correct package path for Material
