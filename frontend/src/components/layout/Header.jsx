@@ -2,10 +2,11 @@ import React from "react";
 import Container from "./Container";
 import Button from "@/components/ui/Button";
 import { Menu } from "@/components/pages/Header";
-import links from "@/constants/link";
+import links from "@/constants/paths";
 import useAuthStore from "@/store/useAuthStore";
 import { Avatar, Input, ToggleTheme } from "../ui";
 import { CartIcon, SearchIcon } from "@/components/icons";
+import { NavLink } from "react-router-dom";
 
 const Header = () => {
   const { isLogin } = useAuthStore();
@@ -63,7 +64,12 @@ const Header = () => {
         <div className="navbar-end gap-2">
           {isLogin ? (
             <>
-              <Input size="md" icon={<SearchIcon />} />
+              <Input
+                size="md"
+                icon={<SearchIcon />}
+                type="search"
+                placeholder="search"
+              />
               <ToggleTheme />
               <Button
                 lable={<CartIcon />}
@@ -97,11 +103,11 @@ const Header = () => {
             <>
               <ToggleTheme />
               <Button
-                lable="Dang nhap"
+                lable={<NavLink to="/auth/login">Dang nhap</NavLink>}
                 className="px-3 py-2 bg-primary text-primary-content min-w-24"
               />
               <Button
-                lable="Dang ki"
+                lable={<NavLink to="/auth/register">Dang ki</NavLink>}
                 className="px-3 py-2 bg-primary text-primary-content min-w-24"
               />
             </>
