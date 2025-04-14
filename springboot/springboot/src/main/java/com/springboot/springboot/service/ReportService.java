@@ -40,7 +40,7 @@ public class ReportService {
         return materialRepository.findAll();
     }
 
-    // Doanh thu theo ngày cho biểu đồ
+    // Biểu đồ doanh thu theo ngày 
     public List<Map<String, Object>> getDailySales() {
         List<Order> orders = orderRepository.findAll();
 
