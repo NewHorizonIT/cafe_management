@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-playwrite : "Playwrite HU", cursive
+  --font-playwrite: "Playwrite HU", cursive;
 }
 
 @plugin "daisyui" {
