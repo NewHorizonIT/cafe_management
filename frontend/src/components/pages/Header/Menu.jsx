@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { NavItem } from ".";
 
 const Menu = ({ links }) => {
+  console.log("MENU", links);
   return (
     <ul className="menu menu-horizontal px-1">
       {links.map((link) => (
