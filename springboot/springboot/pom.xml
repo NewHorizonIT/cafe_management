@@ -67,10 +67,7 @@
 		</dependency>
 
 		<!-- JWT -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
+		<!-- Removed duplicate spring-boot-starter-security dependency -->
 		<!-- For JWT support -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -117,7 +114,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<scope>annotationProcessor</scope>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
