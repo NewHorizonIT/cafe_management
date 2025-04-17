@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
-
 @RestController
 @RequestMapping("/db_cafe_management/auth")
 public class AuthenticationController {
@@ -29,7 +27,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/token")
-    public ResponseEntity<ApiResponse<AuthenticationResponse>> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<ApiResponse<AuthenticationResponse>> authenticate(
+            @RequestBody AuthenticationRequest request) {
         AuthenticationResponse response = authenticationService.authenticate(request);
         return ResponseEntity.ok(ApiResponse.<AuthenticationResponse>builder()
                 .code("200")
@@ -39,7 +38,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/introspect")
-    public ResponseEntity<ApiResponse<IntrospectResponse>> introspect(@RequestBody IntrospectRequest request) throws Exception {
+    public ResponseEntity<ApiResponse<IntrospectResponse>> introspect(@RequestBody IntrospectRequest request)
+            throws Exception {
         IntrospectResponse response = authenticationService.introspect(request);
         return ResponseEntity.ok(ApiResponse.<IntrospectResponse>builder()
                 .code("200")
@@ -58,7 +58,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<ApiResponse<AuthenticationResponse>> refreshToken(@RequestBody RefreshRequest request) throws Exception {
+    public ResponseEntity<ApiResponse<AuthenticationResponse>> refreshToken(@RequestBody RefreshRequest request)
+            throws Exception {
         AuthenticationResponse response = authenticationService.refreshToken(request);
         return ResponseEntity.ok(ApiResponse.<AuthenticationResponse>builder()
                 .code("200")
@@ -67,5 +68,3 @@ public class AuthenticationController {
                 .build());
     }
 }
-
-

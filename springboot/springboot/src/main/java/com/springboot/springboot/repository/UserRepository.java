@@ -31,8 +31,10 @@ public class UserRepository {
         user.setPhone(rs.getString("phone"));
         user.setPassword(rs.getString("password"));
         user.setStatus(rs.getString("status"));
-        user.setCreatedAt(rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
-        user.setUpdatedAt(rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+        user.setCreatedAt(
+                rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+        user.setUpdatedAt(
+                rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
         return user;
     };
 
@@ -42,7 +44,7 @@ public class UserRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement ps = connection.prepareStatement(sql, new String[] { "id" });
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPhone());
@@ -118,19 +120,19 @@ public class UserRepository {
 
     // Lấy danh sách role của một user
     public List<Integer> findRoleIdsByUserId(int userId) {
-        String sql = "SELECT roles_id FROM user_roles WHERE user_id = ?";
+        String sql = "SELECT role_id FROM users_roles WHERE user_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getInt("role_id"), userId);
     }
 
     // Gán role cho user
     public void assignRole(int userId, int roleId) {
-        String sql = "INSERT INTO user_roles (user_id, roles_id) VALUES (?, ?)";
+        String sql = "INSERT INTO users_roles (user_id, role_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, roleId);
     }
 
     // Xóa role của user
     public void removeRole(int userId, int roleId) {
-        String sql = "DELETE FROM user_roles WHERE user_id = ? AND roles_id = ?";
+        String sql = "DELETE FROM users_roles WHERE user_id = ? AND role_id = ?";
         jdbcTemplate.update(sql, userId, roleId);
     }
 
@@ -140,9 +142,9 @@ public class UserRepository {
 
         // Lấy danh sách roles của user
         String rolesSql = """
-                SELECT r.name
+                SELECT r.role
                 FROM roles r
-                JOIN user_roles ur ON r.id = ur.roles_id
+                JOIN users_roles ur ON r.id = ur.role_id
                 WHERE ur.user_id = ?
                 """;
         List<String> roles = jdbcTemplate.query(rolesSql, (rs, rowNum) -> rs.getString("name"), userId);
@@ -152,8 +154,8 @@ public class UserRepository {
         String permissionsSql = """
                 SELECT DISTINCT p.name
                 FROM permissions p
-                JOIN role_permissions rp ON p.id = rp.permission_id
-                JOIN user_roles ur ON rp.role_id = ur.roles_id
+                JOIN roles_permissions rp ON p.id = rp.permission_id
+                JOIN users_roles ur ON rp.role_id = ur.role_id
                 WHERE ur.user_id = ?
                 """;
         List<String> permissions = jdbcTemplate.query(permissionsSql, (rs, rowNum) -> rs.getString("name"), userId);
@@ -162,5 +164,3 @@ public class UserRepository {
         return rolesAndPermissions;
     }
 }
-
-
