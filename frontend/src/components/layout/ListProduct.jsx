@@ -5,7 +5,7 @@ const ListProduct = ({ products = [] }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
       {products.length > 0 ? (
-        products.map((product) => <CardProduct {...product} />)
+        products.map((product, i) => <CardProduct key={i} {...product} />)
       ) : (
         <h1>Load error</h1>
       )}

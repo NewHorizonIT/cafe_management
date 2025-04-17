@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Container from "./Container";
 import Button from "@/components/ui/Button";
 import { Menu } from "@/components/pages/Header";
@@ -7,10 +7,30 @@ import useAuthStore from "@/store/useAuthStore";
 import { Avatar, Input, ToggleTheme } from "../ui";
 import { CartIcon, SearchIcon } from "@/components/icons";
 import { NavLink } from "react-router-dom";
+import Cart from "../ui/Cart";
 
 const Header = () => {
   const { isLogin } = useAuthStore();
-  console.log(isLogin);
+
+  const [cartItems, setCartItems] = useState([]);
+  const [isCartVisible, setIsCartVisible] = useState(false);
+
+  const handleRemove = (id) => {
+    setCartItems(cartItems.filter((item) => item.id !== id));
+  };
+
+  const handleUpdateQuantity = (id, quantity) => {
+    setCartItems(
+      cartItems.map((item) =>
+        item.id === id ? { ...item, quantity: parseInt(quantity, 10) } : item
+      )
+    );
+  };
+
+  const toggleCartVisibility = () => {
+    setIsCartVisible(!isCartVisible);
+  };
+
   return (
     <Container className="bg-base-300 shadow-2xl border-b-2">
       <div className="navbar w-full h-[60px] bg-transparent justify-between">
@@ -64,17 +84,23 @@ const Header = () => {
         <div className="navbar-end gap-2">
           {isLogin ? (
             <>
-              <Input
-                size="md"
-                icon={<SearchIcon />}
-                type="search"
-                placeholder="search"
-              />
+              <Input size="md" icon={<SearchIcon />} type="search" />
               <ToggleTheme />
               <Button
                 lable={<CartIcon />}
                 className="bg-transparent shadow-none border-0"
+                eventHandler={toggleCartVisibility}
               />
+              {isCartVisible && (
+                <div className="fixed top-0 right-0 w-1/3 h-full bg-base-100 shadow-lg z-50">
+                  <Cart
+                    items={cartItems}
+                    onRemove={handleRemove}
+                    onUpdateQuantity={handleUpdateQuantity}
+                    onClose={toggleCartVisibility}
+                  />
+                </div>
+              )}
               <div className="dropdown dropdown-hover">
                 <div
                   tabIndex={0}
