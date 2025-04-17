@@ -19,7 +19,7 @@ public class InvalidatedTokenRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private RowMapper<InvalidatedToken> invalidatedTokenRowMapper = (ResultSet rs, int rowNum) -> {
+    private RowMapper<InvalidatedToken> invalidatedTokenRowMapper = (ResultSet rs, int _) -> {
         InvalidatedToken token = new InvalidatedToken();
         token.setId(rs.getString("id"));
         token.setExpiryTime(rs.getTimestamp("expiry_time"));
@@ -40,5 +40,10 @@ public class InvalidatedTokenRepository {
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
         return count != null && count > 0;
     }
-}
 
+    // Lấy token từ bảng invalidated_tokens theo id
+    public InvalidatedToken findById(String id) {
+        String sql = "SELECT * FROM invalidated_tokens WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, invalidatedTokenRowMapper, id);
+    }
+}

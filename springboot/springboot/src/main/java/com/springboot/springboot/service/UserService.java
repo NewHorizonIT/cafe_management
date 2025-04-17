@@ -1,23 +1,18 @@
 package com.springboot.springboot.service;
 
-import com.springboot.springboot.constant.PredefinedRole;
 import com.springboot.springboot.dto.request.UserCreationRequest;
 import com.springboot.springboot.dto.request.UserUpdateMeRequest;
 import com.springboot.springboot.dto.request.UserUpdateRequest;
 import com.springboot.springboot.dto.response.UserResponse;
-import com.springboot.springboot.entity.Role;
 import com.springboot.springboot.entity.User;
-import com.springboot.springboot.exception.AppException;
 import com.springboot.springboot.repository.RoleRepository;
 import com.springboot.springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,7 +114,7 @@ public class UserService {
     }
 
     // Update (chỉ Admin)
-    public UserResponse updateUser(int id,  UserUpdateRequest request) {
+    public UserResponse updateUser(int id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 

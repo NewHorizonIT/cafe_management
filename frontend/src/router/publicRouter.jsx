@@ -1,4 +1,6 @@
 import { AuthLayout, DefaultLayout } from "@/layouts";
+import DashboardLayout from "@/layouts/DashboardLayout";
+import { CashierDashboard } from "@/pages";
 import ErrorPage from "@/pages/ErrorPage";
 import { lazy } from "react";
 
@@ -33,6 +35,16 @@ const publicRouter = [
       {
         path: "login",
         element: <LoginPage />,
+      },
+    ],
+  },
+  {
+    path: "/cashier/",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "/",
+        children: <CashierDashboard />,
       },
     ],
   },
