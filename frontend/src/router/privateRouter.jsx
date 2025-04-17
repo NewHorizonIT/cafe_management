@@ -1,13 +1,14 @@
-import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
+import useAuthStore from "@/store/useAuthStore";
+import { Navigate, Outlet } from "react-router-dom";
 
-const PrivateRoute = ({ user, allowedRoles }) => {
-  if (!user) return <Navigate to="/login" replace />;
+const PrivateRoute = ({ allowedRoles }) => {
+  const role = useAuthStore((state) => state.data.role);
 
-  if (!allowedRoles.includes(user.role)) return <Navigate to="/" replace />;
+  if (!role) return <Navigate to="/login" replace />;
+
+  if (!allowedRoles.includes(role)) return <Navigate to="/" replace />;
 
   return <Outlet />;
 };
 
-const privateRouter = createBrowserRouter([]);
-
-export default privateRouter;
+export default PrivateRoute;
