@@ -1,46 +1,46 @@
-// ReportController
 package com.springboot.springboot.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.springboot.springboot.model.Material;
-import com.springboot.springboot.model.Order;
-import com.springboot.springboot.model.Purchase;
 import com.springboot.springboot.service.ReportService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reports")
 public class ReportController {
+
     @Autowired
     private ReportService reportService;
 
-    // Xem toàn bộ báo cáo bán hàng
-    @GetMapping("/orders")
-    public List<Order> getAllOrders() {
-        return reportService.getAllOrders();
+    // 1. Tổng doanh thu
+    @GetMapping("/total-revenue")
+    public double getTotalRevenue() {
+        return reportService.getTotalRevenue();
     }
 
-    // Xem toàn bộ báo cáo mua hàng
-    @GetMapping("/purchases")
-    public List<Purchase> getAllPurchases() {
-        return reportService.getAllPurchases();
+    // 2. Doanh thu theo ngày
+    @GetMapping("/revenue/day")
+    public double getRevenueByDay(@RequestParam String date) {
+        return reportService.getRevenueByDay(LocalDate.parse(date));
     }
 
-    // Xem toàn bộ báo cáo nhập kho
-    @GetMapping("/material")
-    public List<Material> getAllMaterial() {
-        return reportService.getAllMaterials();
+    // 3. Doanh thu theo tháng
+    @GetMapping("/revenue/month")
+    public double getRevenueByMonth(@RequestParam int month, @RequestParam int year) {
+        return reportService.getRevenueByMonth(month, year);
     }
 
-    // Thống kê tổng hợp
-    @GetMapping("/stats")
-    public Map<String, Object> getStats() {
-        return reportService.getStats();
+    // 4. Thống kê đơn hàng
+    @GetMapping("/orders-summary")
+    public Map<String, Integer> getOrderSummary() {
+        return reportService.getOrderSummary();
+    }
+
+    // 5. Top sản phẩm bán chạy
+    @GetMapping("/top-products")
+    public Map<String, Integer> getTopSellingProducts() {
+        return reportService.getTopSellingProducts();
     }
 }

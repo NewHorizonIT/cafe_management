@@ -1,92 +1,90 @@
-// ReportService
 package com.springboot.springboot.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.springboot.springboot.model.Order;
+import com.springboot.springboot.model.OrderDetail;
+import com.springboot.springboot.repository.OrderRepository;
+import com.springboot.springboot.repository.OrderDetailRepository;
+import com.springboot.springboot.repository.DrinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.springboot.springboot.model.Material;
-import com.springboot.springboot.model.Order;
-import com.springboot.springboot.model.Purchase;
-import com.springboot.springboot.repository.MaterialRepository;
-import com.springboot.springboot.repository.OrderRepository;
-import com.springboot.springboot.repository.PurchaseRepository;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class ReportService {
+
     @Autowired
     private OrderRepository orderRepository;
+
     @Autowired
-    private PurchaseRepository purchaseRepository;
+    private OrderDetailRepository orderDetailRepository;
+
     @Autowired
-    private MaterialRepository materialRepository;
+    private DrinkRepository drinkRepository;
 
-    // Lấy tất cả đơn hàng
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public double getTotalRevenue() {
+        return orderRepository.findAll().stream()
+                .filter(o -> o.getStatus() == 1)
+                .mapToDouble(Order::getTotal)
+                .sum();
     }
 
-    // Lấy tất cả đơn nhập hàng
-    public List<Purchase> getAllPurchases() {
-        return purchaseRepository.findAll();
+    public double getRevenueByDay(LocalDate date) {
+        return orderRepository.findAll().stream()
+                .filter(o -> o.getStatus() == 1 && o.getCreatedAt().toLocalDate().equals(date))
+                .mapToDouble(Order::getTotal)
+                .sum();
     }
 
-    // Lấy tất cả tồn kho
-    public List<Material> getAllMaterials() {
-        return materialRepository.findAll();
+    public double getRevenueByMonth(int month, int year) {
+        return orderRepository.findAll().stream()
+                .filter(o -> o.getStatus() == 1 &&
+                        o.getCreatedAt().getMonthValue() == month &&
+                        o.getCreatedAt().getYear() == year)
+                .mapToDouble(Order::getTotal)
+                .sum();
     }
 
-    // Biểu đồ doanh thu theo ngày 
-    public List<Map<String, Object>> getDailySales() {
-        List<Order> orders = orderRepository.findAll();
+    public Map<String, Integer> getOrderSummary() {
+        List<Order> orders = (List<Order>) orderRepository.findAll();
+        int approved = (int) orders.stream().filter(o -> o.getStatus() == 1).count();
+        int cancelled = (int) orders.stream().filter(o -> o.getStatus() == -1).count();
+        int pending = (int) orders.stream().filter(o -> o.getStatus() == 0).count();
 
-        return orders.stream()
-            .filter(order -> order.getCreatedAt() != null)
-            .collect(Collectors.groupingBy(
-                order -> order.getCreatedAt().toLocalDate().toString(),
-                Collectors.summingInt(Order::getTotal)
-            ))
-            .entrySet().stream()
-            .map(entry -> {
-                Map<String, Object> map = new HashMap<>();
-                map.put("date", entry.getKey());
-                map.put("sales", entry.getValue());
-                return map;
-            })
-            .collect(Collectors.toList());
+        Map<String, Integer> summary = new HashMap<>();
+        summary.put("approved", approved);
+        summary.put("cancelled", cancelled);
+        summary.put("pending", pending);
+        return summary;
     }
 
-    // Thống kê tổng hợp
-    public Map<String, Object> getStats() {
-        Map<String, Object> stats = new HashMap<>();
+    public Map<String, Integer> getTopSellingProducts() {
+        List<OrderDetail> details = orderDetailRepository.findAll();
+        Map<Integer, Integer> productSales = new HashMap<>();
 
-        // Thống kê bán hàng
-        List<Order> orders = orderRepository.findAll();
-        int totalSales = orders.stream().mapToInt(Order::getTotal).sum();
-        stats.put("totalSales", totalSales);
-        stats.put("orderCount", orders.size());
+        for (OrderDetail detail : details) {
+            int drinkId = detail.getDrinkId();
+            int quantity = detail.getQuantity();
+            productSales.put(drinkId, productSales.getOrDefault(drinkId, 0) + quantity);
+        }
 
-        // Thống kê mua hàng
-        List<Purchase> purchases = purchaseRepository.findAll();
-        int totalPurchaseCost = purchases.stream().mapToInt(Purchase::getTotal).sum();
-        stats.put("totalPurchaseCost", totalPurchaseCost);
-        stats.put("purchaseCount", purchases.size());
+        // Lấy tên sản phẩm
+        Map<String, Integer> top = new HashMap<>();
+        productSales.entrySet().stream()
+                .sorted((a, b) -> b.getValue() - a.getValue())
+                .limit(5)
+                .forEach(entry -> {
+                    String name = drinkRepository.findById(entry.getKey()).getName();
+                    if (name == null) {
+                        name = "Unknown Product";
+                    } else {
+                        name = drinkRepository.findById(entry.getKey()).getName();
+                    }
 
-        // Thống kê tồn kho
-        List<Material> materials = materialRepository.findAll();
-        Map<String, Integer> inventoryByMaterial = materials.stream()
-            .collect(Collectors.toMap(
-                Material::getName,
-                Material::getQuantity,
-                Integer::sum
-            ));
-        stats.put("inventoryByMaterial", inventoryByMaterial);
-        stats.put("inventoryItemCount", materials.size());
+                    top.put(name, entry.getValue());
+                });
 
-        return stats;
+        return top;
     }
 }
