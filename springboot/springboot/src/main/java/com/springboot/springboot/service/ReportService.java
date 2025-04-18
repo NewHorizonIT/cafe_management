@@ -2,7 +2,6 @@ package com.springboot.springboot.service;
 
 import com.springboot.springboot.model.Order;
 import com.springboot.springboot.model.OrderDetail;
-import com.springboot.springboot.model.Drink;
 import com.springboot.springboot.repository.OrderRepository;
 import com.springboot.springboot.repository.OrderDetailRepository;
 import com.springboot.springboot.repository.DrinkRepository;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
@@ -49,7 +47,7 @@ public class ReportService {
     }
 
     public Map<String, Integer> getOrderSummary() {
-        List<Order> orders = orderRepository.findAll();
+        List<Order> orders = (List<Order>) orderRepository.findAll();
         int approved = (int) orders.stream().filter(o -> o.getStatus() == 1).count();
         int cancelled = (int) orders.stream().filter(o -> o.getStatus() == -1).count();
         int pending = (int) orders.stream().filter(o -> o.getStatus() == 0).count();
@@ -74,12 +72,18 @@ public class ReportService {
         // Lấy tên sản phẩm
         Map<String, Integer> top = new HashMap<>();
         productSales.entrySet().stream()
-            .sorted((a, b) -> b.getValue() - a.getValue())
-            .limit(5)
-            .forEach(entry -> {
-                String name = drinkRepository.findById(entry.getKey()).map(Drink::getName).orElse("Unknown");
-                top.put(name, entry.getValue());
-            });
+                .sorted((a, b) -> b.getValue() - a.getValue())
+                .limit(5)
+                .forEach(entry -> {
+                    String name = drinkRepository.findById(entry.getKey()).getName();
+                    if (name == null) {
+                        name = "Unknown Product";
+                    } else {
+                        name = drinkRepository.findById(entry.getKey()).getName();
+                    }
+
+                    top.put(name, entry.getValue());
+                });
 
         return top;
     }

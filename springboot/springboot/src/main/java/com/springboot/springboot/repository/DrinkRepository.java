@@ -21,7 +21,7 @@ public class DrinkRepository {
         drink.setName(rs.getString("name"));
         drink.setThumbnail(rs.getString("thumbnail"));
         drink.setDescription(rs.getString("description"));
-        drink.setPrice(rs.getString("price"));
+        drink.setPrice(rs.getInt("price"));
         drink.setStock(rs.getInt("stock"));
         drink.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
         drink.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
@@ -32,7 +32,8 @@ public class DrinkRepository {
     // Thêm sản phẩm mới
     public int save(Drink drink) {
         String sql = "INSERT INTO drink (name, thumbnail, description, price, stock, created_at, updated_at, category_id) VALUES (?, ?, ?, ?, ?, NOW(), NOW(), ?)";
-        return jdbcTemplate.update(sql, drink.getName(), drink.getThumbnail(), drink.getDescription(), drink.getPrice(), drink.getStock(), drink.getCategoryId());
+        return jdbcTemplate.update(sql, drink.getName(), drink.getThumbnail(), drink.getDescription(), drink.getPrice(),
+                drink.getStock(), drink.getCategoryId());
     }
 
     // Lấy danh sách tất cả sản phẩm
@@ -56,7 +57,8 @@ public class DrinkRepository {
     // Cập nhật sản phẩm
     public int update(Drink drink) {
         String sql = "UPDATE drink SET name = ?, thumbnail = ?, description = ?, price = ?, stock = ?, updated_at = NOW(), category_id = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, drink.getName(), drink.getThumbnail(), drink.getDescription(), drink.getPrice(), drink.getStock(), drink.getCategoryId(), drink.getId());
+        return jdbcTemplate.update(sql, drink.getName(), drink.getThumbnail(), drink.getDescription(), drink.getPrice(),
+                drink.getStock(), drink.getCategoryId(), drink.getId());
     }
 
     // Xóa sản phẩm

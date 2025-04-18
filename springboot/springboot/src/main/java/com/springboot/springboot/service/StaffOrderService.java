@@ -20,17 +20,22 @@ public class StaffOrderService {
 
     // Duyệt đơn (status = 1)
     public Order approveOrder(int orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+        Order order = orderRepository.findById(orderId);
+        if (order == null) {
+            throw new RuntimeException("Order not found");
+        }
 
-        order.setStatus(1); // 1 = đã duyệt
+        order.setStatus(1);
         return orderRepository.save(order);
     }
 
     // Hủy đơn (status = -1)
     public Order cancelOrder(int orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+        Order order = orderRepository.findById(orderId);
+
+        if (order == null) {
+            throw new RuntimeException("Order not found");
+        }
 
         order.setStatus(-1); // -1 = hủy
         return orderRepository.save(order);

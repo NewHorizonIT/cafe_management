@@ -9,8 +9,6 @@ import com.springboot.springboot.repository.DrinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class OrderService {
 
@@ -29,10 +27,14 @@ public class OrderService {
         // Duyệt qua các chi tiết đơn hàng để tính tổng giá trị
         for (OrderDetail orderDetail : order.getOrderDetails()) {
             // Lấy sản phẩm tương ứng từ database
-            Drink drink = drinkRepository.findById(orderDetail.getDrinkId()).orElseThrow(() -> new RuntimeException("Product not found"));
+            Drink drink = drinkRepository.findById(orderDetail.getDrinkId());
+
+            if (drink == null) {
+                throw new RuntimeException("Drink not found with id: " + orderDetail.getDrinkId());
+            }
 
             // Tính toán giá trị cho mỗi chi tiết đơn hàng
-            double orderItemTotal = orderDetail.getQuantity() * drink.getPrice();
+            int orderItemTotal = drink.getPrice() * orderDetail.getQuantity();
             orderDetail.setTotal(orderItemTotal);
             total += orderItemTotal;
 
@@ -42,15 +44,16 @@ public class OrderService {
         }
 
         // Cập nhật tổng giá trị cho đơn hàng
-        order.setTotal(total);
+        order.setTotal((int) total);
 
         // Lưu đơn hàng và các chi tiết đơn hàng
         order = orderRepository.save(order);
-        
+
         // Lưu các chi tiết đơn hàng vào cơ sở dữ liệu
         for (OrderDetail orderDetail : order.getOrderDetails()) {
             orderDetail.setOrderId(order.getId());
-            orderDetailRepository.save(orderDetail);
+            orderDetailRepository.saveOrderDetail(orderDetail);
+            ;
         }
 
         return order;
