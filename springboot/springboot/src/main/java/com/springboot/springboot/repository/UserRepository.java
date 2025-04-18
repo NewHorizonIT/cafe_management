@@ -120,7 +120,7 @@ public class UserRepository {
 
     // Lấy danh sách role của một user
     public List<Integer> findRoleIdsByUserId(int userId) {
-        String sql = "SELECT role_id FROM users_roles WHERE user_id = ?";
+        String sql = "SELECT roles_id FROM users_roles WHERE user_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getInt("role_id"), userId);
     }
 

@@ -28,8 +28,10 @@ public class RoleRepository {
         Role role = new Role();
         role.setId(rs.getInt("id"));
         role.setName(rs.getString("role"));
-        role.setCreatedAt(rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
-        role.setUpdatedAt(rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+        role.setCreatedAt(
+                rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+        role.setUpdatedAt(
+                rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
         return role;
     };
 
@@ -39,7 +41,7 @@ public class RoleRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement ps = connection.prepareStatement(sql, new String[] { "id" });
             ps.setString(1, role.getName());
             ps.setTimestamp(2, Timestamp.valueOf(role.getCreatedAt()));
             ps.setTimestamp(3, Timestamp.valueOf(role.getUpdatedAt()));
@@ -103,6 +105,3 @@ public class RoleRepository {
         jdbcTemplate.update(sql, roleId, permissionId);
     }
 }
-
-
-

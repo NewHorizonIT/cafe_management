@@ -19,7 +19,7 @@ public class InvalidatedTokenRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private RowMapper<InvalidatedToken> invalidatedTokenRowMapper = (ResultSet rs, int _) -> {
+    private RowMapper<InvalidatedToken> invalidatedTokenRowMapper = (ResultSet rs, int row) -> {
         InvalidatedToken token = new InvalidatedToken();
         token.setId(rs.getString("id"));
         token.setExpiryTime(rs.getTimestamp("expiry_time"));

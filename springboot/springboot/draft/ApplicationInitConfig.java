@@ -132,25 +132,25 @@ public class ApplicationInitConfig {
                 }
 
                 // Tạo vai trò ADMIN nếu chưa tồn tại
-                Role adminRole;
-                if (!roleRepository.existsByName(PredefinedRole.ADMIN_ROLE.getRoleName())) {
-                    adminRole = roleRepository.save(Role.builder()
-                            .name(PredefinedRole.ADMIN_ROLE.getRoleName())
-                            .createdAt(now)
-                            .updatedAt(now)
-                            .build());
+                // Role adminRole;
+                // if (!roleRepository.existsByName(PredefinedRole.ADMIN_ROLE.getRoleName())) {
+                // adminRole = roleRepository.save(Role.builder()
+                // .name(PredefinedRole.ADMIN_ROLE.getRoleName())
+                // .createdAt(now)
+                // .updatedAt(now)
+                // .build());
 
-                    // Gán permissions cho ADMIN_ROLE
-                    roleRepository.assignPermission(adminRole.getId(), viewUsers.getId());
-                    roleRepository.assignPermission(adminRole.getId(), editUsers.getId());
-                    roleRepository.assignPermission(adminRole.getId(), deleteUsers.getId());
-                    roleRepository.assignPermission(adminRole.getId(), manageRoles.getId());
-                } else {
-                    adminRole = roleRepository.findAll().stream()
-                            .filter(r -> r.getName().equals(PredefinedRole.ADMIN_ROLE.getRoleName()))
-                            .findFirst()
-                            .orElseThrow(() -> new RuntimeException("ADMIN_ROLE not found"));
-                }
+                // // Gán permissions cho ADMIN_ROLE
+                // roleRepository.assignPermission(adminRole.getId(), viewUsers.getId());
+                // roleRepository.assignPermission(adminRole.getId(), editUsers.getId());
+                // roleRepository.assignPermission(adminRole.getId(), deleteUsers.getId());
+                // roleRepository.assignPermission(adminRole.getId(), manageRoles.getId());
+                // } else {
+                // adminRole = roleRepository.findAll().stream()
+                // .filter(r -> r.getName().equals(PredefinedRole.ADMIN_ROLE.getRoleName()))
+                // .findFirst()
+                // .orElseThrow(() -> new RuntimeException("ADMIN_ROLE not found"));
+                // }
 
                 // Tạo tài khoản admin
                 User user = User.builder()
@@ -166,7 +166,7 @@ public class ApplicationInitConfig {
                 user = userRepository.save(user);
 
                 // Gán vai trò ADMIN cho tài khoản
-                userRepository.assignRole(user.getId(), adminRole.getId());
+                // userRepository.assignRole(user.getId(), adminRole.getId());
 
                 log.warn("Admin user has been created with default password: {}, please change it", ADMIN_PASSWORD);
             }

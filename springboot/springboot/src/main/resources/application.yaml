@@ -22,12 +22,10 @@ spring:
   main:
     allow-bean-definition-overriding: true
     lazy-initialization: true
-
-#
-#logging:
-#  level:
-#    org.springframework.jdbc.core: DEBUG
-#    root: DEBUG
+# logging:
+#   level:
+#     org.springframework.jdbc.core: DEBUG
+#     root: DEBUG
 
 
 jwt:

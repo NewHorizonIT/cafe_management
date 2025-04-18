@@ -1,5 +1,6 @@
 import { Container, HeroSection, ListProduct } from "@/components/layout";
 import Heading from "@/components/ui/Heading";
+import AdvancedSearch from "@/components/ui/AdvancedSearch";
 import React from "react";
 
 const Home = () => {
@@ -53,6 +54,12 @@ const Home = () => {
       createdAt: "2025-03-20", // Assume this is a date string
     },
   ];
+
+  const handleSearch = (filters) => {
+    console.log("Search filters:", filters);
+    // Add logic to fetch and display search results based on filters
+  };
+
   return (
     <>
       <HeroSection heroImg="https://dreamheatersystem.com/wp-content/uploads/2019/04/hero-section-image.jpg" />
@@ -62,6 +69,7 @@ const Home = () => {
           className="text-center"
           des="day la danh sach"
         />
+        <AdvancedSearch onSearch={handleSearch} />
         <ListProduct products={products} />
       </Container>
     </>
