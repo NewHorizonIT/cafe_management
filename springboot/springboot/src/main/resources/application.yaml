@@ -23,12 +23,10 @@ spring:
     allow-bean-definition-overriding: true
     lazy-initialization: true
 
-
-logging:
-  level:
-    org.springframework.jdbc.core: DEBUG
-    root: DEBUG
-
+# logging:
+#   level:
+#     org.springframework.jdbc.core: DEBUG
+#     root: DEBUG
 
 jwt:
   signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
