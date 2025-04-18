@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/drinks")
+@RequestMapping("/api/v1/drinks")
 public class DrinkController {
 
     @Autowired
