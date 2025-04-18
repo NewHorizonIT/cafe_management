@@ -3,7 +3,7 @@ spring:
     name: springboot
 
   datasource:
-    url: jdbc:mysql://localhost:3306/db_cafe_management
+    url: jdbc:mysql://localhost:3306/cafe_management
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -22,11 +22,11 @@ spring:
   main:
     allow-bean-definition-overriding: true
     lazy-initialization: true
-
 # logging:
 #   level:
 #     org.springframework.jdbc.core: DEBUG
 #     root: DEBUG
+
 
 jwt:
   signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
