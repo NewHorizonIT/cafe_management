@@ -1,4 +1,4 @@
-import { AuthLayout, DefaultLayout } from "@/layouts";
+import { AuthLayout, DefaultLayout, UserLayout } from "@/layouts";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { CashierDashboard } from "@/pages";
 import { BillHistory, CashierStats, OrderApprove } from "@/pages/Cashier";
@@ -16,6 +16,8 @@ import {
   AdminDashboard,
 } from "../pages/Admin";
 import PrivateRoute from "./privateRouter";
+import UserProfile from "@/pages/User/UserProfile";
+import UserHistory from "@/pages/User/UserHistory";
 
 const Home = lazy(() => import("@/pages/Home"));
 const About = lazy(() => import("@/pages/About"));
@@ -119,6 +121,14 @@ const router = createBrowserRouter([
         path: "enterprise",
         element: <EnterpriseManager />,
       },
+    ],
+  },
+  {
+    path: "user",
+    element: <DefaultLayout />,
+    children: [
+      { path: "profile", element: <UserProfile /> },
+      { path: "history", element: <UserHistory /> },
     ],
   },
   { path: "*", element: <ErrorPage /> },

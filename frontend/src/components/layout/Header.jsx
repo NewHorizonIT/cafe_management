@@ -12,7 +12,26 @@ import Cart from "../ui/Cart";
 const Header = () => {
   const { isLogin } = useAuthStore();
 
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState([
+    {
+      id: "CART001",
+      name: "Cà phê sữa đá",
+      price: 30000,
+      quantity: 2,
+    },
+    {
+      id: "CART002",
+      name: "Trà đào cam sả",
+      price: 45000,
+      quantity: 1,
+    },
+    {
+      id: "CART003",
+      name: "Bánh mì phô mai",
+      price: 25000,
+      quantity: 3,
+    },
+  ]);
   const [isCartVisible, setIsCartVisible] = useState(false);
 
   const handleRemove = (id) => {
@@ -117,10 +136,10 @@ const Header = () => {
                   className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
                 >
                   <li>
-                    <a>Item 1</a>
+                    <NavLink to="/user/profile">Profile</NavLink>
                   </li>
                   <li>
-                    <a>Item 2</a>
+                    <NavLink to="/user/history">Lich su mua hang</NavLink>
                   </li>
                 </ul>
               </div>
