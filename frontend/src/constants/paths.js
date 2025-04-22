@@ -1,28 +1,28 @@
 const paths = [
   {
     id: 1,
-    lable: "Trang chu",
+    lable: "Trang chủ",
     path: "/",
   },
   {
     id: 2,
-    lable: "Gioi thieu",
+    lable: "Giới thiệu",
     path: "/about",
   },
   {
     id: 3,
-    lable: "Danh muc",
-    path: "/category",
+    lable: "Danh mục",
+    path: "/",
     sub: [
       {
         id: 4,
-        lable: "Tea",
-        path: "/category/tea",
+        lable: "Trà",
+        path: "/tea",
       },
       {
         id: 5,
-        lable: "Coffe",
-        path: "/category/coffe",
+        lable: "Coffee",
+        path: "/coffee",
       },
     ],
   },

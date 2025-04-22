@@ -1,7 +1,20 @@
 import React, { useState } from "react";
 import { Button, Modal } from "./index";
+import useCartStore from "@/store/useCartStore";
+import { CloseIcon } from "../icons";
 
-const Cart = ({ items, onRemove, onUpdateQuantity, onClose }) => {
+const Cart = ({ handleClose }) => {
+  // const { cart, removeFromCart, updateQuantity } = useCartStore((state) => ({
+  //   cart: state.cart,
+  //   removeFromCart: state.removeFromCart,
+  //   updateQuantity: state.updateQuantity,
+  // }));
+
+  const cart = useCartStore((state) => state.cart);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const cleanCart = useCartStore((state) => state.clearCart);
+
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState("");
 
@@ -10,43 +23,65 @@ const Cart = ({ items, onRemove, onUpdateQuantity, onClose }) => {
   };
 
   const handleConfirmOrder = () => {
-    console.log("Order confirmed:", { items, deliveryAddress });
+    console.log("Order confirmed:", { cart, deliveryAddress });
     alert("Đơn hàng đã được đặt thành công!");
     setIsOrderModalOpen(false);
     setDeliveryAddress("");
+    cleanCart();
   };
 
   return (
-    <div className="cart bg-base-100 p-4 shadow-lg rounded-lg">
-      <h2>Shopping Cart</h2>
+    <div className="cart bg-base-100 p-4 shadow-lg rounded-lg relative">
+      <h2 className="text-2xl mb-5">Giỏ hàng</h2>
       <Button
-        lable={"Close"}
-        className="bg-transparent shadow-none border-0"
-        eventHandler={() => {
-          onClose();
-        }}
+        lable={<CloseIcon />}
+        className="bg-transparent shadow-none border-0 absolute top-2 right-2"
+        eventHandler={handleClose}
       ></Button>
-      {items.length === 0 ? (
-        <p>Your cart is empty.</p>
+      {cart.length === 0 ? (
+        <p className="text-center">Giỏ hàng trống</p>
       ) : (
-        <ul>
-          {items.map((item) => (
-            <li key={item.id} className="cart-item">
-              <span>{item.name}</span>
-              <span>{item.price}</span>
-              <input
-                type="number"
-                value={item.quantity}
-                onChange={(e) => onUpdateQuantity(item.id, e.target.value)}
-              />
-              <Button onClick={() => onRemove(item.id)}>Remove</Button>
-            </li>
-          ))}
-        </ul>
+        <table className="table-auto w-full">
+          <thead>
+            <tr>
+              <th className="px-4 py-2">Tên</th>
+              <th className="px-4 py-2">Giá</th>
+              <th className="px-4 py-2">Số lượng</th>
+              <th className="px-4 py-2">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cart.map((item) => (
+              <tr key={item.id} className="cart-item">
+                <td className="border px-4 py-2">{item.name}</td>
+                <td className="border px-4 py-2">{item.price}</td>
+                <td className="border px-4 py-2">
+                  <input
+                    type="number"
+                    min="1"
+                    value={item.quantity ?? 1}
+                    onChange={(e) => {
+                      const newQty = Number(e.target.value);
+                      if (item.quantity !== newQty) {
+                        updateQuantity(item.id, newQty);
+                      }
+                    }}
+                    className="w-16 text-center border rounded"
+                  />
+                </td>
+                <td className="border px-4 py-2">
+                  <Button eventHandler={() => removeFromCart(item.id)}>
+                    Xóa
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
-      {items.length > 0 && (
+      {cart.length > 0 && (
         <Button
-          lable="Place Order"
+          lable="Đặt hàng"
           className="btn btn-primary mt-4"
           eventHandler={handlePlaceOrder}
         />
@@ -59,12 +94,19 @@ const Cart = ({ items, onRemove, onUpdateQuantity, onClose }) => {
       >
         <h3 className="text-lg font-bold">Order Summary</h3>
         <ul className="list-disc list-inside">
-          {items.map((item) => (
+          {cart.map((item) => (
             <li key={item.id}>
-              {item.name} - Quantity: {item.quantity} - Price: {item.price}
+              {item.name} - Quantity: {item.quantity || 1} - Price: {item.price}
             </li>
           ))}
         </ul>
+        <div className="mt-4 font-bold">
+          Total Price:{" "}
+          {cart.reduce(
+            (total, item) => total + item.price * (item.quantity || 1),
+            0
+          )}
+        </div>
         <div className="mt-4">
           <label
             className="block text-gray-700 font-bold mb-2"

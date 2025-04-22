@@ -11,9 +11,12 @@ const Sidebar = () => {
       { label: "Hoa Don", path: "/cashier/bills" },
       { label: "Thong ke", path: "/cashier/stats" },
     ],
-    warehouse: [
-      { label: "Tồn kho", path: "/warehouse/inventory" },
-      { label: "Nhập hàng", path: "/warehouse/import" },
+    warehouser: [
+      { label: "Tồn kho", path: "/warehouse/materials" },
+      { label: "Sản phẩm", path: "/warehouse/products" },
+      { label: "Nhà cung cấp", path: "/warehouse/suppliers" },
+      { label: "Nhập hàng", path: "/warehouse/purchases" },
+      { label: "Thống kê", path: "/warehouse/stats" },
     ],
     manager: [
       { label: "Báo cáo", path: "/manager/report" },
@@ -26,13 +29,22 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="w-64 bg-base-300 h-full p-4">
-      <p className="text-3xl font-playwrite">MyCoffe</p>
-      <ul className="menu">
+    <aside className="w-64 bg-base-300 h-full py-4">
+      <p className="text-3xl font-playwrite text-center">MyCoffe</p>
+      <ul className="menu w-full p-0 my-5 flex flex-col gap-2">
         {menus[role]?.map((item) => (
-          <li key={item.path}>
-            <NavLink to={item.path}>{item.label}</NavLink>
-          </li>
+          <NavLink
+            key={item.path}
+            end
+            className={({ isActive }) =>
+              isActive
+                ? "bg-primary text-primary-content flex items-center p-4"
+                : "w-full h-full flex items-center p-4 hover:bg-primary hover:text-primary-content"
+            }
+            to={item.path}
+          >
+            {item.label}
+          </NavLink>
         ))}
       </ul>
     </aside>

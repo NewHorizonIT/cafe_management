@@ -18,6 +18,10 @@ import {
 import PrivateRoute from "./privateRouter";
 import UserProfile from "@/pages/User/UserProfile";
 import UserHistory from "@/pages/User/UserHistory";
+import DrinksByCategory from "@/pages/DrinksByCategory";
+import ProductDetail from "@/pages/ProductDetail";
+import IngredientCRUD from "@/pages/Warehouse/IngredientCRUD";
+import ProductCRUD from "@/pages/Warehouse/ProductCRUD";
 
 const Home = lazy(() => import("@/pages/Home"));
 const About = lazy(() => import("@/pages/About"));
@@ -37,6 +41,14 @@ const router = createBrowserRouter([
         path: "about",
         element: <About />,
       },
+      {
+        path: ":category",
+        element: <DrinksByCategory />,
+      },
+      {
+        path: "products/:id",
+        element: <ProductDetail />,
+      },
     ],
   },
   {
@@ -55,11 +67,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/cashier",
-    element: (
-      <PrivateRoute allowedRoles={["Cashier"]}>
-        <DashboardLayout />
-      </PrivateRoute>
-    ),
+    element: <DashboardLayout />,
     children: [
       {
         index: true,
@@ -89,7 +97,7 @@ const router = createBrowserRouter([
       },
       {
         path: "materials",
-        element: <MaterialCRUD />,
+        element: <IngredientCRUD />,
       },
       {
         path: "stats",
@@ -102,6 +110,10 @@ const router = createBrowserRouter([
       {
         path: "purchases",
         element: <ImportForm />,
+      },
+      {
+        path: "products",
+        element: <ProductCRUD />,
       },
     ],
   },
@@ -120,6 +132,10 @@ const router = createBrowserRouter([
       {
         path: "enterprise",
         element: <EnterpriseManager />,
+      },
+      {
+        path: "bills",
+        element: <BillHistory />,
       },
     ],
   },

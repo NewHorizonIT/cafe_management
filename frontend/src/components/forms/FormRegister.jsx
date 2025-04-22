@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NavLink } from "react-router-dom";
+import { ToggleTheme } from "../ui";
 
 const schemaRegister = z.object({
   userName: z.string().min(4, "Ten toi thieu phai 4 ki tu"),
@@ -24,61 +25,83 @@ const FormRegister = () => {
   return (
     <form
       onSubmit={handleSubmit(handleRegister)}
-      className="bg-base-300 rounded-2xl p-5 shadow-lg min-w-[300px] "
+      className="bg-base-200 rounded-lg p-8 shadow-md w-full min-w-md mx-auto"
     >
-      <h2 className="text-3xl text-center pb-5">Welcome MyCoffe</h2>
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-col gap-3">
-          <label htmlFor="userName">UserName</label>
+      <h2 className="text-4xl font-bold text-center mb-6 text-base-content">
+        Tham gia MyCoffee
+      </h2>
+      <div className="space-y-4">
+        <div>
+          <label
+            htmlFor="userName"
+            className="block text-sm font-medium text-base-content"
+          >
+            Username
+          </label>
           <input
             type="text"
             id="userName"
             {...register("userName")}
-            className="border-2 rounded-sm gap-3"
+            className="mt-1 h-[40px] block w-full border border-base-content rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
           />
           {errors.userName && (
-            <p style={{ color: "red" }}>{errors.userName.message}</p>
+            <p className="text-red-500 text-xs mt-1">
+              {errors.userName.message}
+            </p>
           )}
         </div>
-        <div className="flex flex-col gap-3">
-          <label htmlFor="email">Email</label>
+        <div>
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-base-content"
+          >
+            Email
+          </label>
           <input
             type="email"
             id="email"
             {...register("email")}
-            className="border-2 rounded-sm gap-3"
+            className="mt-1 h-[40px] block w-full border border-base-content rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
           />
           {errors.email && (
-            <p style={{ color: "red" }}>{errors.email.message}</p>
+            <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
           )}
         </div>
-        <div className="flex flex-col gap-3">
-          <label htmlFor="password">Password</label>
+        <div>
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-base-content"
+          >
+            Mât khẩu
+          </label>
           <input
-            type="text"
+            type="password"
             id="password"
             {...register("password")}
-            className="border-2 rounded-sm"
+            className="mt-1 h-[40px] block w-full border border-base-content rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
           />
           {errors.password && (
-            <p style={{ color: "red" }}>{errors.password.message}</p>
+            <p className="text-red-500 text-xs mt-1">
+              {errors.password.message}
+            </p>
           )}
         </div>
       </div>
-      <div className="flex justify-center items-center cursor-pointer">
+      <div className="mt-6">
         <button
           type="submit"
-          className="btn-md bg-primary text-primary-content py-2 px-5 text-base rounded-sm mt-5 cursor-pointer"
+          className="w-full bg-primary text-white py-2 px-4 rounded-md shadow hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         >
-          Register
+          Đăng ký
         </button>
       </div>
-      <p className="text-center text-sm">
-        Ban da co tai khoang?
-        <NavLink to="/auth/login" className="text-primary">
-          Dang nhap
+      <p className="mt-4 text-center text-sm text-gray-600">
+        Bạn đã có tài khoản?{" "}
+        <NavLink to="/auth/login" className="text-primary hover:underline">
+          Đăng nhập
         </NavLink>
       </p>
+      {/* <ToggleTheme /> */}
     </form>
   );
 };
