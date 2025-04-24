@@ -14,6 +14,7 @@ const Cart = ({ handleClose }) => {
   const removeFromCart = useCartStore((state) => state.removeFromCart);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const cleanCart = useCartStore((state) => state.clearCart);
+  const [paymentMethod, setPaymentMethod] = useState("cod");
 
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState("");
@@ -28,6 +29,7 @@ const Cart = ({ handleClose }) => {
     setIsOrderModalOpen(false);
     setDeliveryAddress("");
     cleanCart();
+    handleClose();
   };
 
   return (
@@ -89,30 +91,34 @@ const Cart = ({ handleClose }) => {
 
       <Modal
         isOpen={isOrderModalOpen}
-        title="Confirm Your Order"
+        title="Xác nhận đơn hàng"
         onClose={() => setIsOrderModalOpen(false)}
       >
-        <h3 className="text-lg font-bold">Order Summary</h3>
+        <h3 className="text-lg font-bold">Tóm tắt đơn hàng</h3>
         <ul className="list-disc list-inside">
           {cart.map((item) => (
             <li key={item.id}>
-              {item.name} - Quantity: {item.quantity || 1} - Price: {item.price}
+              {item.name} - SL: {item.quantity || 1} - Giá: {item.price}
             </li>
           ))}
         </ul>
         <div className="mt-4 font-bold">
-          Total Price:{" "}
+          Tổng tiền:{" "}
           {cart.reduce(
-            (total, item) => total + item.price * (item.quantity || 1),
+            (total, item) =>
+              total +
+              parseInt(item.price.replace(/[^0-9]/g, ""), 10) *
+                (item.quantity || 1),
             0
-          )}
+          )}{" "}
+          VND
         </div>
         <div className="mt-4">
           <label
             className="block text-gray-700 font-bold mb-2"
             htmlFor="address"
           >
-            Delivery Address
+            Địa chỉ giao hàng
           </label>
           <textarea
             id="address"
@@ -122,9 +128,28 @@ const Cart = ({ handleClose }) => {
             required
           ></textarea>
         </div>
+        <div className="mt-4">
+          <label
+            htmlFor="paymentMethod"
+            className="block text-gray-700 font-bold mb-2"
+          >
+            Phương thức thanh toán
+          </label>
+          <select
+            id="paymentMethod"
+            value={paymentMethod}
+            onChange={(e) => setPaymentMethod(e.target.value)}
+            className="select select-bordered w-full"
+            required
+          >
+            <option value="cod">Thanh toán khi nhận hàng (COD)</option>
+            <option value="bank">Chuyển khoản ngân hàng</option>
+            <option value="momo">Ví MoMo</option>
+          </select>
+        </div>
         <Button
-          lable="Confirm Order"
-          className="btn btn-success mt-4"
+          lable="Xác nhận"
+          className="btn bg-primary text-primary-content mt-4"
           eventHandler={handleConfirmOrder}
         />
       </Modal>

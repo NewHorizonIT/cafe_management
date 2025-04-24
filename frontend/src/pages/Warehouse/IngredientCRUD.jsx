@@ -29,11 +29,11 @@ const IngredientCRUD = () => {
 
   return (
     <div className="p-5">
-      <h2 className="text-xl font-bold mb-4">Manage Ingredients</h2>
+      <h2 className="text-xl font-bold mb-4">Quản lý nguyên liệu </h2>
       <div className="mb-4">
         <input
           type="text"
-          placeholder="Ingredient Name"
+          placeholder="Nguyên liệu"
           value={newIngredient.name}
           onChange={(e) =>
             setNewIngredient({ ...newIngredient, name: e.target.value })
@@ -42,7 +42,7 @@ const IngredientCRUD = () => {
         />
         <input
           type="number"
-          placeholder="Quantity"
+          placeholder="Số lượng"
           value={newIngredient.quantity}
           onChange={(e) =>
             setNewIngredient({ ...newIngredient, quantity: e.target.value })
@@ -51,7 +51,7 @@ const IngredientCRUD = () => {
         />
         <input
           type="text"
-          placeholder="Unit"
+          placeholder="Đơn vị"
           value={newIngredient.unit}
           onChange={(e) =>
             setNewIngredient({ ...newIngredient, unit: e.target.value })
@@ -62,17 +62,17 @@ const IngredientCRUD = () => {
           onClick={handleAddIngredient}
           className="bg-blue-500 text-white px-4 py-2 rounded"
         >
-          Add Ingredient
+          Thêm nguyên liệu
         </button>
       </div>
       <table className="w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-gray-100">
             <th className="border px-4 py-2">ID</th>
-            <th className="border px-4 py-2">Name</th>
-            <th className="border px-4 py-2">Quantity</th>
-            <th className="border px-4 py-2">Unit</th>
-            <th className="border px-4 py-2">Actions</th>
+            <th className="border px-4 py-2">Tên</th>
+            <th className="border px-4 py-2">Số lượng</th>
+            <th className="border px-4 py-2">Đơn vị</th>
+            <th className="border px-4 py-2">Hành động</th>
           </tr>
         </thead>
         <tbody>
@@ -82,12 +82,18 @@ const IngredientCRUD = () => {
               <td className="border px-4 py-2">{ingredient.name}</td>
               <td className="border px-4 py-2">{ingredient.quantity}</td>
               <td className="border px-4 py-2">{ingredient.unit}</td>
-              <td className="border px-4 py-2">
+              <td className="border px-4 py-2 flex gap-2">
                 <button
                   onClick={() => handleDeleteIngredient(ingredient.id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded"
+                  className="btn bg-primary text-primary-content px-3 py-1 rounded"
                 >
-                  Delete
+                  Xóa
+                </button>
+                <button
+                  onClick={() => handleDeleteIngredient(ingredient.id)}
+                  className="btn bg-primary text-primary-content px-3 py-1 rounded"
+                >
+                  Chi tiết
                 </button>
               </td>
             </tr>

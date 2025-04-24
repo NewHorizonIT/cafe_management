@@ -58,12 +58,12 @@ const ImportStats = () => {
 
   return (
     <div className="p-5">
-      <h2 className="text-xl font-bold mb-4">Import Statistics</h2>
+      <h2 className="text-xl font-bold mb-4">Thóng kê </h2>
 
       {/* Bộ lọc tháng, năm */}
       <div className="flex items-center gap-4 mb-4">
         <div>
-          <label className="mr-2 font-medium">Month:</label>
+          <label className="mr-2 font-medium">Tháng:</label>
           <select
             className="border px-3 py-1 rounded"
             value={monthFilter}
@@ -78,7 +78,7 @@ const ImportStats = () => {
         </div>
 
         <div>
-          <label className="mr-2 font-medium">Year:</label>
+          <label className="mr-2 font-medium">Năm:</label>
           <select
             className="border px-3 py-1 rounded"
             value={yearFilter}
@@ -98,9 +98,9 @@ const ImportStats = () => {
         <thead>
           <tr className="bg-gray-100">
             <th className="border px-4 py-2">ID</th>
-            <th className="border px-4 py-2">Product Name</th>
-            <th className="border px-4 py-2">Supplier</th>
-            <th className="border px-4 py-2">Quantity</th>
+            <th className="border px-4 py-2">Tên nguyên liệu</th>
+            <th className="border px-4 py-2">Nhà cung cấp</th>
+            <th className="border px-4 py-2">Số lượng</th>
           </tr>
         </thead>
         <tbody>

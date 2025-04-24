@@ -8,8 +8,8 @@ const Sidebar = () => {
   const menus = {
     cashier: [
       { label: "Đơn hàng", path: "/cashier/orders" },
-      { label: "Hoa Don", path: "/cashier/bills" },
-      { label: "Thong ke", path: "/cashier/stats" },
+      { label: "Hóa đơn", path: "/cashier/bills" },
+      { label: "Thống kê", path: "/cashier/stats" },
     ],
     warehouser: [
       { label: "Tồn kho", path: "/warehouse/materials" },
@@ -24,7 +24,8 @@ const Sidebar = () => {
     ],
     admin: [
       { label: "Người dùng", path: "/admin/users" },
-      { label: "Cài đặt", path: "/admin/settings" },
+      { label: "Thống kê", path: "/admin/stats" },
+      { label: "Doanh nghiệp", path: "/admin/enterprise" },
     ],
   };
 

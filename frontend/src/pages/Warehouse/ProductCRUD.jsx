@@ -81,7 +81,7 @@ const ProductCRUD = () => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Manage Products</h2>
+      <h2 className="text-xl font-bold mb-4">Quản lý san phẩm</h2>
       <div className="flex">
         <input
           type="text"
@@ -118,7 +118,7 @@ const ProductCRUD = () => {
         columns={[
           { header: "ID", accessor: "id" },
           {
-            header: "Name",
+            header: "Tên sản phẩm",
             accessor: "name",
             render: (row) => (
               <button onClick={() => handleSort("name")} className="font-bold">
@@ -127,19 +127,7 @@ const ProductCRUD = () => {
             ),
           },
           {
-            header: "Supplier",
-            accessor: "supplier",
-            render: (row) => (
-              <button
-                onClick={() => handleSort("supplier")}
-                className="font-bold"
-              >
-                {row.supplier}
-              </button>
-            ),
-          },
-          {
-            header: "Price",
+            header: "Giá",
             accessor: "price",
             render: (row) => (
               <button onClick={() => handleSort("price")}>
@@ -148,14 +136,7 @@ const ProductCRUD = () => {
             ),
           },
           {
-            header: "Stock",
-            accessor: "stock",
-            render: (row) => (
-              <button onClick={() => handleSort("stock")}>{row.stock}</button>
-            ),
-          },
-          {
-            header: "Actions",
+            header: "Hành động",
             accessor: "actions",
             render: (row) => (
               <div className="flex gap-2">

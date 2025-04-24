@@ -171,30 +171,30 @@ const CashierStats = () => {
   return (
     <div className="p-5 space-y-10">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Cashier Statistics Overview</h2>
+        <h2 className="text-2xl font-bold">Thống kê tổng quanquan</h2>
         <select
           className="border px-3 py-1 rounded"
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value)}
         >
-          <option value="day">Today</option>
-          <option value="week">This Week</option>
-          <option value="month">This Month</option>
+          <option value="day">Ngày</option>
+          <option value="week">Tuần</option>
+          <option value="month">Tháng</option>
         </select>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-blue-100 p-4 rounded shadow">
-          <h3 className="text-lg font-semibold">Total Sales</h3>
+          <h3 className="text-lg font-semibold">Tổng bán</h3>
           <p className="text-2xl font-bold">${stats.totalSales.toFixed(2)}</p>
         </div>
         <div className="bg-green-100 p-4 rounded shadow">
-          <h3 className="text-lg font-semibold">Total Bills</h3>
+          <h3 className="text-lg font-semibold">Tổng hóa đơn</h3>
           <p className="text-2xl font-bold">{stats.totalBills}</p>
         </div>
         <div className="bg-yellow-100 p-4 rounded shadow">
-          <h3 className="text-lg font-semibold">Average Bill</h3>
+          <h3 className="text-lg font-semibold">Trung bình hóa đơn</h3>
           <p className="text-2xl font-bold">${stats.averageBill.toFixed(2)}</p>
         </div>
       </div>
@@ -202,22 +202,22 @@ const CashierStats = () => {
       {/* Charts Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className={chartBlockClass}>
-          <h3 className="text-lg font-semibold">Sales Summary</h3>
+          <h3 className="text-lg font-semibold">So đồ bán hàng</h3>
           <Bar data={salesChartData} />
         </div>
 
         <div className={chartBlockClass}>
-          <h3 className="text-lg font-semibold">Top Selling Products</h3>
+          <h3 className="text-lg font-semibold">Top đồ uống bán chạy</h3>
           <Bar data={productChartData} />
         </div>
 
         <div className={chartBlockClass}>
-          <h3 className="text-lg font-semibold">Payment Method Distribution</h3>
+          <h3 className="text-lg font-semibold">Phương thưc thanh toán</h3>
           <Doughnut data={paymentChartData} />
         </div>
 
         <div className={chartBlockClass}>
-          <h3 className="text-lg font-semibold">Order Status</h3>
+          <h3 className="text-lg font-semibold">Trạng thái đặt hàng</h3>
           <Pie data={orderStatusChartData} />
         </div>
       </div>
