@@ -7,7 +7,9 @@ const DefaultLayout = () => {
   return (
     <div className="bg-base-100 min-h-screen h-max">
       <Header />
-      <Outlet />
+      <main className="pt-[60px] bg-base-200">
+        <Outlet />
+      </main>
       <Footer
         links={links}
         socialLinks={socialLinks}

@@ -7,23 +7,23 @@ const Footer = ({ links, socialLinks, logo }) => {
         <aside>
           <div>{logo}</div>
           <p>
-            ACME Industries Ltd.
+            Mycoffee shop Ltd.
             <br />
-            Providing reliable tech since 1992
+            Cup cấp đồ uống chất lượng
           </p>
         </aside>
         <nav>
-          <h6 className="footer-title">Social</h6>
-          <div className="grid grid-flow-row gap-4">
+          <h6 className="footer-title">Dịch vụ</h6>
+          <div className="grid grid-flow-row gap-4 list-none cursor-pointer">
             {links.map((link, index) => (
               <li key={index}>
-                <a href={link.href}>{link.label}</a>
+                <a href={link.href}>{link.lable}</a>
               </li>
             ))}
           </div>
         </nav>
         <nav>
-          <h6 className="footer-title">Social</h6>
+          <h6 className="footer-title">Mạng xã hội</h6>
           <div className="flex gap-4">
             {socialLinks.map((item, i) => (
               <a href={item.link} key={i}>

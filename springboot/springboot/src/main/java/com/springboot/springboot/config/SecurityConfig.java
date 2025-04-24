@@ -1,6 +1,5 @@
 package com.springboot.springboot.config;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +24,7 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/db_cafe_management/auth/**", "/db_cafe_management/users/register"
+            "/api/v1/**"
     };
 
     private final CustomJwtDecoder customJwtDecoder;
@@ -50,11 +49,11 @@ public class SecurityConfig {
                         .requestMatchers("/db_cafe_management/users/{id}").hasAuthority("VIEW_USERS")
                         .requestMatchers(HttpMethod.POST, "/db_cafe_management/users").hasAuthority("EDIT_USERS")
                         .requestMatchers(HttpMethod.PUT, "/db_cafe_management/users/{id}").hasAuthority("EDIT_USERS")
-                        .requestMatchers(HttpMethod.DELETE, "/db_cafe_management/users/{id}").hasAuthority("DELETE_USERS")
+                        .requestMatchers(HttpMethod.DELETE, "/db_cafe_management/users/{id}")
+                        .hasAuthority("DELETE_USERS")
                         .requestMatchers("/db_cafe_management/users/{id}/roles/**").hasAuthority("MANAGE_ROLES")
                         // All other requests require authentication
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtConfigurer -> jwtConfigurer
                                 .decoder(customJwtDecoder)
@@ -93,6 +92,3 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(10);
     }
 }
-
-
-

@@ -5,7 +5,7 @@ const useAuthStore = create((set) => ({
   data: {
     userName: "Horizon",
     email: "dev@gmail.com",
-    role: "cashier",
+    role: "admin",
   },
   setIsLogin: (val) => set({ isLogin: val }),
   setData: (data) => set({ data: data }),

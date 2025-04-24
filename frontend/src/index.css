@@ -7,3 +7,46 @@
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, cupcake;
 }
+
+@layer base {
+  .form-user {
+    @apply flex flex-col gap-3;
+  }
+  .form-group {
+    @apply flex gap-2 text-lg;
+  }
+
+  .form-group label {
+    @apply min-w-[100px];
+  }
+
+  .form-group input {
+    @apply border-0 outline-0 border-none;
+  }
+
+  .bill-field {
+    @apply flex gap-2 text-lg mb-4;
+  }
+
+  .modal-field {
+    @apply flex gap-2 text-lg mb-4;
+  }
+
+  .bill-field strong {
+    @apply min-w-[100px];
+  }
+
+  .modal-field strong {
+    @apply min-w-[120px];
+  }
+
+  .modal-field label {
+    @apply min-w-[120px];
+  }
+}
+@layer components {
+  @apply text-base-content;
+}
+@layer utilities {
+  @apply text-base-content;
+}

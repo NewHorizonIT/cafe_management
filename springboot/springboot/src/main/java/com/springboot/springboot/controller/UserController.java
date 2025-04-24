@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/db_cafe_management/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -48,7 +48,8 @@ public class UserController {
 
     // Update current user
     @PutMapping("/me")
-    public ResponseEntity<ApiResponse<UserResponse>> updateCurrentUser(@Valid @RequestBody UserUpdateMeRequest request) {
+    public ResponseEntity<ApiResponse<UserResponse>> updateCurrentUser(
+            @Valid @RequestBody UserUpdateMeRequest request) {
         UserResponse userResponse = userService.updateCurrentUser(request);
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
                 .code("200")
@@ -92,7 +93,8 @@ public class UserController {
 
     // Update (Admin only)
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<UserResponse>> updateUser(@PathVariable int id, @Valid @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<ApiResponse<UserResponse>> updateUser(@PathVariable int id,
+            @Valid @RequestBody UserUpdateRequest request) {
         UserResponse userResponse = userService.updateUser(id, request);
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
                 .code("200")
@@ -142,4 +144,3 @@ public class UserController {
                 .build());
     }
 }
-

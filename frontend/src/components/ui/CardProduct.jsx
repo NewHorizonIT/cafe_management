@@ -1,37 +1,41 @@
 import isNewProduct from "@/utils/checkNew";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Button } from ".";
+import useCartStore from "@/store/useCartStore";
 
-const CardProduct = ({ thumnail, name, createdAt, price, id }) => {
+const CardProduct = ({ thumbnail, name, createdAt, price, id }) => {
+  const addToCart = useCartStore((state) => state.addToCart);
+
   return (
-    <div className="card  shadow-lg border-2 border-neutral-content bg-base-300">
+    <div className="card shadow-lg border-2 border-neutral-content bg-base-300">
       <figure>
-        <img src={thumnail} alt="product" />
+        <img
+          src={thumbnail}
+          alt="product"
+          className="w-full h-48 object-cover"
+        />
       </figure>
       <div className="card-body">
-        <h2 className="card-title">
+        <h2 className="card-title text-lg font-bold">
           {name}
-          {isNewProduct(createdAt) ? (
-            <div className="badge badge-error">NEW</div>
-          ) : (
-            <></>
+          {isNewProduct(createdAt) && (
+            <div className="badge badge-error ml-2">NEW</div>
           )}
         </h2>
-        <p className="text-primary text-xl">{price}</p>
-        <div className="card-actions justify-start">
-          <Button
-            lable={
-              <NavLink className="text-primary-content" to={`products/${id}`}>
-                Chi tiet
-              </NavLink>
-            }
-            className="bg-primary"
-          />
-          <Button
-            lable="Dat hang"
-            className="text-primary-content bg-primary"
-          />
+        <p className="text-primary text-xl font-semibold">{price}</p>
+        <div className="card-actions flex justify-between mt-4">
+          <NavLink
+            to={`/products/${id}`}
+            className="btn btn-outline btn-primary"
+          >
+            Xem chi tiết
+          </NavLink>
+          <button
+            onClick={() => addToCart({ id, name, price, thumbnail })}
+            className="btn btn-primary text-primary-content"
+          >
+            Thêm vào giỏ hàng
+          </button>
         </div>
       </div>
     </div>

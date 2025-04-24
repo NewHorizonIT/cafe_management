@@ -8,31 +8,18 @@ import { Avatar, Input, ToggleTheme } from "../ui";
 import { CartIcon, SearchIcon } from "@/components/icons";
 import { NavLink } from "react-router-dom";
 import Cart from "../ui/Cart";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Header = () => {
   const { isLogin } = useAuthStore();
-
-  const [cartItems, setCartItems] = useState([]);
   const [isCartVisible, setIsCartVisible] = useState(false);
-
-  const handleRemove = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
-
-  const handleUpdateQuantity = (id, quantity) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: parseInt(quantity, 10) } : item
-      )
-    );
-  };
 
   const toggleCartVisibility = () => {
     setIsCartVisible(!isCartVisible);
   };
 
   return (
-    <Container className="bg-base-300 shadow-2xl border-b-2">
+    <Container className="bg-base-300 shadow-2xl border-b-2 z-50 fixed">
       <div className="navbar w-full h-[60px] bg-transparent justify-between">
         <div className="navbar-start w-min">
           <div className="dropdown">
@@ -91,16 +78,22 @@ const Header = () => {
                 className="bg-transparent shadow-none border-0"
                 eventHandler={toggleCartVisibility}
               />
-              {isCartVisible && (
-                <div className="fixed top-0 right-0 w-1/3 h-full bg-base-100 shadow-lg z-50">
-                  <Cart
-                    items={cartItems}
-                    onRemove={handleRemove}
-                    onUpdateQuantity={handleUpdateQuantity}
-                    onClose={toggleCartVisibility}
-                  />
-                </div>
-              )}
+              <AnimatePresence>
+                {isCartVisible && (
+                  <motion.div
+                    initial={{ x: "100%" }}
+                    animate={{ x: 0 }}
+                    exit={{ x: "100%" }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    className="fixed top-0 right-0 w-1/3 h-full bg-base-100 shadow-lg z-50"
+                  >
+                    <Cart
+                      handleClose={toggleCartVisibility}
+                      isCartOpen={isCartVisible}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
               <div className="dropdown dropdown-hover">
                 <div
                   tabIndex={0}
@@ -117,23 +110,24 @@ const Header = () => {
                   className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
                 >
                   <li>
-                    <a>Item 1</a>
+                    <NavLink to="/user/profile">Thông tin cá nhân</NavLink>
                   </li>
                   <li>
-                    <a>Item 2</a>
+                    <NavLink to="/user/history">Lịch sử mua hàng</NavLink>
                   </li>
                 </ul>
               </div>
             </>
           ) : (
             <>
+              <Input size="md" icon={<SearchIcon />} type="search" />
               <ToggleTheme />
               <Button
-                lable={<NavLink to="/auth/login">Dang nhap</NavLink>}
+                lable={<NavLink to="/auth/login">Đăng kí</NavLink>}
                 className="px-3 py-2 bg-primary text-primary-content min-w-24"
               />
               <Button
-                lable={<NavLink to="/auth/register">Dang ki</NavLink>}
+                lable={<NavLink to="/auth/register">Đăng nhập</NavLink>}
                 className="px-3 py-2 bg-primary text-primary-content min-w-24"
               />
             </>

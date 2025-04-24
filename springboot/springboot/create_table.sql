@@ -1,10 +1,10 @@
--- Bảng api_keys
-CREATE TABLE api_keys (
-    id INT(10) PRIMARY KEY AUTO_INCREMENT,
-    key VARCHAR(64) UNIQUE,
-    status INT(10),
-    created_at TIMESTAMP
-);
+# -- Bảng api_keys
+# CREATE TABLE api_keys (
+#     id INT(10) PRIMARY KEY AUTO_INCREMENT,
+#     key VARCHAR(64) UNIQUE,
+#     status INT(10),
+#     created_at TIMESTAMP
+# );
 
 -- Bảng users
 CREATE TABLE users (
@@ -175,4 +175,9 @@ CREATE TABLE purchase_details (
     PRIMARY KEY (material_id, purchase_id),
     FOREIGN KEY (material_id) REFERENCES materials(id),
     FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id)
+);
+-- invalidated_tokens
+CREATE TABLE invalidated_tokens (
+                                    id VARCHAR(255) PRIMARY KEY, -- Lưu JWT ID (jit)
+                                    expiry_time TIMESTAMP NOT NULL -- Thời gian hết hạn của token
 );
