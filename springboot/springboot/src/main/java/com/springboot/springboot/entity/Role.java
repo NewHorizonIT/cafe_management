@@ -21,6 +21,7 @@ public class Role {
     String name;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+
     @ManyToMany
     Set<Permission> permissions;
 }

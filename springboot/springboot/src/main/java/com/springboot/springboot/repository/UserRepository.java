@@ -1,6 +1,7 @@
 package com.springboot.springboot.repository;
 
 import com.springboot.springboot.entity.User;
+import com.springboot.springboot.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -39,10 +40,12 @@ public class UserRepository {
     };
 
     // Create
-    public User save(User user) {
+    public User save(User user, int roleId) {
+        // SQL để chèn user vào bảng users
         String sql = "INSERT INTO users (username, email, phone, password, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
+        // Chèn user vào bảng users
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[] { "id" });
             ps.setString(1, user.getUsername());
@@ -55,9 +58,17 @@ public class UserRepository {
             return ps;
         }, keyHolder);
 
-        user.setId(keyHolder.getKey().intValue());
+        // Lấy id của user vừa được lưu
+        int userId = keyHolder.getKey().intValue();
+        user.setId(userId);
+
+        // Gán role cho user
+        String sql1 = "INSERT INTO users_roles (user_id, role_id) VALUES (?, ?)";
+        jdbcTemplate.update(sql1, userId, roleId);
+
         return user;
     }
+
 
     // Read (lấy tất cả người dùng)
     public List<User> findAll() {
@@ -120,7 +131,7 @@ public class UserRepository {
 
     // Lấy danh sách role của một user
     public List<Integer> findRoleIdsByUserId(int userId) {
-        String sql = "SELECT roles_id FROM users_roles WHERE user_id = ?";
+        String sql = "SELECT role_id FROM users_roles WHERE user_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getInt("role_id"), userId);
     }
 
@@ -163,4 +174,5 @@ public class UserRepository {
 
         return rolesAndPermissions;
     }
+
 }

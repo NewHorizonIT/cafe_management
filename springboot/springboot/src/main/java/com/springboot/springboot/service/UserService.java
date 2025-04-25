@@ -4,7 +4,10 @@ import com.springboot.springboot.dto.request.UserCreationRequest;
 import com.springboot.springboot.dto.request.UserUpdateMeRequest;
 import com.springboot.springboot.dto.request.UserUpdateRequest;
 import com.springboot.springboot.dto.response.UserResponse;
+import com.springboot.springboot.entity.Role;
 import com.springboot.springboot.entity.User;
+import com.springboot.springboot.exception.AppException;
+import com.springboot.springboot.exception.ErrorCode;
 import com.springboot.springboot.repository.RoleRepository;
 import com.springboot.springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,14 +90,12 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setStatus("active");
+        user.setStatus("true");
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
+        int roleId=request.getRoleId();
 
-        user = userRepository.save(user);
-
-        // Gán vai trò mặc định là BUYER (role_id = 4)
-        userRepository.assignRole(user.getId(), 4);
+        user = userRepository.save(user,roleId);
 
         return mapToUserResponse(user);
     }
@@ -175,7 +177,7 @@ public class UserService {
     }
 
     // Helper method: Chuyển entity thành DTO
-    private UserResponse mapToUserResponse(User user) {
+    private UserResponse mapToUserResponse(User user ){
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
