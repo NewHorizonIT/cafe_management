@@ -158,7 +158,7 @@ public class UserRepository {
                 JOIN users_roles ur ON r.id = ur.role_id
                 WHERE ur.user_id = ?
                 """;
-        List<String> roles = jdbcTemplate.query(rolesSql, (rs, rowNum) -> rs.getString("name"), userId);
+        List<String> roles = jdbcTemplate.query(rolesSql, (rs, rowNum) -> rs.getString("role"), userId);
         rolesAndPermissions.put("roles", roles);
 
         // Lấy danh sách permissions của user thông qua roles

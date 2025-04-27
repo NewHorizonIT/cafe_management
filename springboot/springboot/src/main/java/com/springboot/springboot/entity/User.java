@@ -30,12 +30,14 @@ public class User {
     String email;
     String phone;
     String password;
+    String address;
     String status;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 
     @ManyToMany
     Set<Role> roles;
+
 }
 
 

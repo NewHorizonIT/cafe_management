@@ -1,6 +1,5 @@
 package com.springboot.springboot.controller;
 
-import com.springboot.springboot.dto.request.UserUpdateMeRequest;
 import com.springboot.springboot.dto.request.UserUpdateRequest;
 import com.springboot.springboot.dto.response.ApiResponse;
 import com.springboot.springboot.dto.request.UserCreationRequest;
@@ -39,18 +38,6 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserResponse>> getCurrentUser() {
         UserResponse userResponse = userService.getCurrentUser();
-        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
-                .code("200")
-                .message("Success")
-                .result(userResponse)
-                .build());
-    }
-
-    // Update current user
-    @PutMapping("/me")
-    public ResponseEntity<ApiResponse<UserResponse>> updateCurrentUser(
-            @Valid @RequestBody UserUpdateMeRequest request) {
-        UserResponse userResponse = userService.updateCurrentUser(request);
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
                 .code("200")
                 .message("Success")

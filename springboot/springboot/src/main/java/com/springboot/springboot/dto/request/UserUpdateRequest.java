@@ -18,6 +18,8 @@ public class UserUpdateRequest {
 
     @Size(min = 10, max = 11, message = "Phone must be between 10 and 11 characters")
     String phone;
+
+    String address;
 }
 
 
