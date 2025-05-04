@@ -24,18 +24,20 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     int id;
     String username;
     String email;
     String phone;
     String password;
+    String address;
     String status;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 
     @ManyToMany
     Set<Role> roles;
+
 }
 
 

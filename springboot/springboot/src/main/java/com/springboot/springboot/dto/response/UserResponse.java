@@ -19,5 +19,7 @@ public class UserResponse {
     String status;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
-    Set<String> roles;
+    String address;
+    int roles;
+    String token;
 }

@@ -48,23 +48,23 @@ public class AuthenticationController {
                 .build());
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(@RequestBody LogoutRequest request) throws Exception {
-        authenticationService.logout(request);
-        return ResponseEntity.ok(ApiResponse.<Void>builder()
-                .code("200")
-                .message("Success")
-                .build());
-    }
-
-    @PostMapping("/refresh")
-    public ResponseEntity<ApiResponse<AuthenticationResponse>> refreshToken(@RequestBody RefreshRequest request)
-            throws Exception {
-        AuthenticationResponse response = authenticationService.refreshToken(request);
-        return ResponseEntity.ok(ApiResponse.<AuthenticationResponse>builder()
-                .code("200")
-                .message("Success")
-                .result(response)
-                .build());
-    }
+//    @PostMapping("/logout")
+//    public ResponseEntity<ApiResponse<Void>> logout(@RequestBody LogoutRequest request) throws Exception {
+//        authenticationService.logout(request);
+//        return ResponseEntity.ok(ApiResponse.<Void>builder()
+//                .code("200")
+//                .message("Success")
+//                .build());
+//    }
+//
+//    @PostMapping("/refresh")
+//    public ResponseEntity<ApiResponse<AuthenticationResponse>> refreshToken(@RequestBody RefreshRequest request)
+//            throws Exception {
+//        AuthenticationResponse response = authenticationService.refreshToken(request);
+//        return ResponseEntity.ok(ApiResponse.<AuthenticationResponse>builder()
+//                .code("200")
+//                .message("Success")
+//                .result(response)
+//                .build());
+//    }
 }

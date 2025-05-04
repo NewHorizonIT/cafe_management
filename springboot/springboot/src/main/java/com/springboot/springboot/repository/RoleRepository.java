@@ -65,6 +65,13 @@ public class RoleRepository {
         return roles.isEmpty() ? Optional.empty() : Optional.of(roles.getFirst());
     }
 
+    // Read (Lấy role theo tên)
+    public Optional<Role> findByName(String name) {
+        String sql = "SELECT * FROM roles WHERE role = ?";
+        List<Role> roles = jdbcTemplate.query(sql, roleRowMapper, name);
+        return roles.isEmpty() ? Optional.empty() : Optional.of(roles.getFirst());
+    }
+
     // Update
     public void update(Role role) {
         String sql = "UPDATE roles SET role = ?, updated_at = ? WHERE id = ?";
@@ -73,6 +80,8 @@ public class RoleRepository {
                 Timestamp.valueOf(role.getUpdatedAt()),
                 role.getId());
     }
+
+
 
     // Delete
     public void deleteById(int id) {

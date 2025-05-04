@@ -1,7 +1,6 @@
 package com.springboot.springboot.service;
 
 import com.springboot.springboot.dto.request.UserCreationRequest;
-import com.springboot.springboot.dto.request.UserUpdateMeRequest;
 import com.springboot.springboot.dto.request.UserUpdateRequest;
 import com.springboot.springboot.dto.response.UserResponse;
 import com.springboot.springboot.entity.User;
@@ -10,6 +9,7 @@ import com.springboot.springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,12 +22,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationService authenticationService;
+
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, SecurityFilterChain jwtSecurityFilterChain, AuthenticationService authenticationService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationService = authenticationService;
     }
 
     // Lấy user hiện tại
@@ -45,31 +48,7 @@ public class UserService {
         return mapToUserResponse(user);
     }
 
-    // Cập nhật thông tin cá nhân của user hiện tại
-    public UserResponse updateCurrentUser(UserUpdateMeRequest request) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
-
-        if (request.getEmail() != null && !request.getEmail().equals(user.getEmail())) {
-            if (userRepository.existsByEmail(request.getEmail())) {
-                throw new RuntimeException("Email already exists");
-            }
-            user.setEmail(request.getEmail());
-        }
-        if (request.getPhone() != null && !request.getPhone().equals(user.getPhone())) {
-            if (userRepository.existsByPhone(request.getPhone())) {
-                throw new RuntimeException("Phone already exists");
-            }
-            user.setPhone(request.getPhone());
-        }
-        user.setUpdatedAt(LocalDateTime.now());
-
-        userRepository.update(user);
-        return mapToUserResponse(user);
-    }
-
-    // Create
+       // Create
     public UserResponse createUser(UserCreationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username already exists");
@@ -86,16 +65,23 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setStatus("active");
+        user.setAddress(request.getAddress());
+        user.setStatus("true");
+        user.setAddress(request.getAddress());
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
 
-        user = userRepository.save(user);
 
-        // Gán vai trò mặc định là BUYER (role_id = 4)
-        userRepository.assignRole(user.getId(), 4);
+        int roleId = request.getRoleId() != null
+                ? request.getRoleId()
+                : 1;
 
-        return mapToUserResponse(user);
+        user = userRepository.save(user,roleId);
+
+//        Tạo Token khi tạo user
+        String token = authenticationService.generateToken(user);
+
+        return mapToCreateUserResponse(user,roleId,token);
     }
 
     // Read (lấy tất cả người dùng)
@@ -113,7 +99,7 @@ public class UserService {
         return mapToUserResponse(user);
     }
 
-    // Update (chỉ Admin)
+    // Update
     public UserResponse updateUser(int id, UserUpdateRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
@@ -136,6 +122,11 @@ public class UserService {
             }
             user.setPhone(request.getPhone());
         }
+
+        if (request.getAddress() != null && !request.getAddress().equals(user.getAddress())) {
+           user.setAddress(request.getAddress());
+        }
+
         user.setUpdatedAt(LocalDateTime.now());
 
         userRepository.update(user);
@@ -175,7 +166,7 @@ public class UserService {
     }
 
     // Helper method: Chuyển entity thành DTO
-    private UserResponse mapToUserResponse(User user) {
+    private UserResponse mapToUserResponse(User user ){
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -184,6 +175,20 @@ public class UserService {
                 .status(user.getStatus())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
+                .build();
+    }
+    private UserResponse mapToCreateUserResponse(User user,int id, String token){
+        return UserResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .status(user.getStatus())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .address(user.getAddress())
+                .roles(id)
+                .token(token)
                 .build();
     }
 }
