@@ -65,9 +65,13 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+<<<<<<< HEAD
         user.setAddress(request.getAddress());
         user.setStatus("true");
         user.setAddress(request.getAddress());
+=======
+        user.setStatus("true");
+>>>>>>> 1c741eb (feat:fix order)
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
 
