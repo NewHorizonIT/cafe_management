@@ -87,4 +87,27 @@ public class ReportService {
 
         return top;
     }
+        // Lấy dữ liệu doanh thu theo ngày cho biểu đồ
+    public List<Map<String, Object>> getDailySales() {
+        List<Order> orders = (List<Order>) orderRepository.findAll();
+
+        // Nhóm doanh thu theo ngày
+        Map<LocalDate, Double> revenueByDate = orders.stream()
+                .filter(o -> o.getStatus() == 1)
+                .collect(Collectors.groupingBy(
+                        order -> order.getCreatedAt().toLocalDate(),
+                        Collectors.summingDouble(Order::getTotal)
+                ));
+
+        // Chuyển đổi thành List<Map<String, Object>>
+        return revenueByDate.entrySet().stream()
+                .map(entry -> {
+                    Map<String, Object> dailyRevenue = new HashMap<>();
+                    dailyRevenue.put("date", entry.getKey());
+                    dailyRevenue.put("revenue", entry.getValue());
+                    return dailyRevenue;
+                })
+                .sorted(Comparator.comparing(map -> (LocalDate) map.get("date")))
+                .collect(Collectors.toList());
+    }
 }
