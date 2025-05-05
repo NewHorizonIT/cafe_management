@@ -4,6 +4,7 @@ import com.springboot.springboot.model.Order;
 import com.springboot.springboot.model.OrderDetail;
 import com.springboot.springboot.repository.OrderRepository;
 import com.springboot.springboot.repository.OrderDetailRepository;
+import com.springboot.springboot.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class StaffOrderService {
 
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+    
+    @Autowired
+    private InvoiceRepository invoiceRepository;
 
     // Duyệt đơn (status = 1)
     public Order approveOrder(int orderId) {
@@ -26,7 +30,11 @@ public class StaffOrderService {
         }
 
         order.setStatus(1);
-        return orderRepository.save(order);
+        orderRepository.save(order);
+        
+        //Tạo hóa đơn sau khi duyệt
+        invoiceRepository.createInvoice(orderId);
+        return order;
     }
 
     // Hủy đơn (status = -1)
