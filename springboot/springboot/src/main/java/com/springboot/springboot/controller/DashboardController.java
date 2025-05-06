@@ -1,6 +1,5 @@
 package com.springboot.springboot.controller;
 
-import com.springboot.springboot.dto.response.ApiResponse;
 import com.springboot.springboot.entity.User;
 import com.springboot.springboot.model.Drink;
 import com.springboot.springboot.service.DashboardService;
@@ -19,7 +18,7 @@ import com.springboot.springboot.repository.PurchaseRepository;
 import com.springboot.springboot.service.ReportService;
 
 @RestController
-@RequestMapping("/api/dashboard")
+@RequestMapping("/api/v1/dashboard")
 public class DashboardController {
     @Autowired
     private OrderRepository orderRepository;
@@ -36,9 +35,10 @@ public class DashboardController {
     @GetMapping("/summary")
     public Map<String, Object> getDashboardSummary() {
         Map<String, Object> summary = new HashMap<>();
-        summary.put("totalOrders", orderRepository.count());
-        summary.put("totalPurchases", purchaseRepository.count());
-        summary.put("totalMaterial", materialRepository.count());
+        // Chỉ lấy số lượng đơn hàng thông qua ReportService
+        Map<String, Integer> orderSummary = reportService.getOrderSummary();
+        int totalOrders = orderSummary.get("approved") + orderSummary.get("cancelled") + orderSummary.get("pending");
+        summary.put("totalOrders", totalOrders);
         return summary;
     }
 
@@ -50,36 +50,21 @@ public class DashboardController {
 
     // API lọc doanh thu theo ngày
     @GetMapping("/revenue-by-date")
-    public ApiResponse<List<String>> getRevenueByDate(
+    public List<String> getRevenueByDate(
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        List<String> revenueByDate = dashboardService.getRevenueByDate(startDate, endDate);
-        return ApiResponse.<List<String>>builder()
-                .code("200")
-                .message("Success")
-                .result(revenueByDate)
-                .build();
+        return dashboardService.getRevenueByDate(startDate, endDate);
     }
 
     // API thống kê người dùng có chi tiêu cao nhất
     @GetMapping("/top-user")
-    public ApiResponse<User> getTopUserByRevenue() {
-        User topUser = dashboardService.getTopUserByRevenue();
-        return ApiResponse.<User>builder()
-                .code("200")
-                .message("Success")
-                .result(topUser)
-                .build();
+    public User getTopUserByRevenue() {
+        return dashboardService.getTopUserByRevenue();
     }
 
     // API lấy 5 sản phẩm bán chạy nhất
     @GetMapping("/top-drinks")
-    public ApiResponse<List<Drink>> getTopDrinks() {
-        List<Drink> topDrinks = dashboardService.getTopDrinks();
-        return ApiResponse.<List<Drink>>builder()
-                .code("200")
-                .message("Success")
-                .result(topDrinks)
-                .build();
+    public List<Drink> getTopDrinks() {
+        return dashboardService.getTopDrinks();
     }
 }
