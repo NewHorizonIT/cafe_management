@@ -1,5 +1,6 @@
 package com.springboot.springboot.service;
 
+import com.springboot.springboot.model.Invoice;
 import com.springboot.springboot.model.Order;
 import com.springboot.springboot.model.OrderDetail;
 import com.springboot.springboot.repository.OrderRepository;
@@ -53,4 +54,30 @@ public class StaffOrderService {
     public List<OrderDetail> getOrderDetails(int orderId) {
         return orderDetailRepository.findByOrderId(orderId);
     }
+
+    // Lấy tất cả hóa đơn
+    public List<Invoice> getAllInvoices() {
+        return invoiceRepository.getAllInvoices();
+    }
+
+    // Lấy hóa đơn theo orderId
+    public List<Invoice> getInvoicesByOrderId(int orderId) {
+        return invoiceRepository.getInvoicesByOrderId(orderId);
+    }
+
+    // Cập nhật hóa đơn
+    public void updateInvoice(int invoiceId, int newOrderId) {
+        invoiceRepository.updateInvoice(invoiceId, newOrderId);
+    }
+
+    // Xóa hóa đơn theo orderId
+    public void deleteInvoicesByOrderId(int orderId) {
+        invoiceRepository.deleteInvoicesByOrderId(orderId);
+    }
+
+    //Tạo hóa đơn
+    public void createInvoice(int orderId) {
+        invoiceRepository.createInvoice(orderId);
+    }
+   
 }
