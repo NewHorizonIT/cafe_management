@@ -56,4 +56,10 @@ public class PurchaseRepository {
         String sql = "DELETE FROM purchase WHERE purchase_id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    // Tìm kiếm phiếu nhập kho theo ID nhà cung cấp
+    public List<Purchase> findBySupplierId(int supplierId) {
+        String sql = "SELECT * FROM purchase WHERE supplier_id = ?";
+        return jdbcTemplate.query(sql, purchaseRowMapper, supplierId);
+    }
 }
