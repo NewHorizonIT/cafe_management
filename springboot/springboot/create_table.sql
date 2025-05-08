@@ -100,6 +100,7 @@ CREATE TABLE invoices (
     invoice_id INT(10) PRIMARY KEY AUTO_INCREMENT,
     order_id INT(10),
     created_at TIMESTAMP,
+    payment VARCHAR(50),
     FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 

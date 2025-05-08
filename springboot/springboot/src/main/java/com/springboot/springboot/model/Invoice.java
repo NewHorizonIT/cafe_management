@@ -12,4 +12,5 @@ public class Invoice {
     private int invoiceId;
     private int orderId;
     private Timestamp createdAt;
+    private PaymentMethod payment;
 }

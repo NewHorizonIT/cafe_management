@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import com.springboot.springboot.model.PaymentMethod;
 
 import java.util.List;
 
@@ -15,9 +16,9 @@ public class InvoiceRepository {
     private JdbcTemplate jdbcTemplate;
 
     // Tạo hóa đơn mới
-    public void createInvoice(int orderId) {
-        String sql = "INSERT INTO invoices (order_id, created_at) VALUES (?, NOW())";
-        jdbcTemplate.update(sql, orderId);
+    public void createInvoice(int orderId, PaymentMethod payment) {
+        String sql = "INSERT INTO invoices (order_id, created_at, payment) VALUES (?, NOW(), ?)";
+        jdbcTemplate.update(sql, orderId, payment.name());
     }
 
     // Lấy tất cả invoices
@@ -42,6 +43,11 @@ public class InvoiceRepository {
     public void deleteInvoicesByOrderId(int orderId) {
         String sql = "DELETE FROM invoices WHERE order_id = ?";
         jdbcTemplate.update(sql, orderId);
+    }
+     // Cập nhật phương thức thanh toán
+     public void updatePaymentMethod(int invoiceId, PaymentMethod payment) {
+        String sql = "UPDATE invoices SET payment = ? WHERE invoice_id = ?";
+        jdbcTemplate.update(sql, payment.name(), invoiceId);
     }
 }
 

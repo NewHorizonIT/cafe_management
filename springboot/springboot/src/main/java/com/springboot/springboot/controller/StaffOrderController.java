@@ -1,6 +1,7 @@
 package com.springboot.springboot.controller;
 
 import com.springboot.springboot.model.Invoice;
+import com.springboot.springboot.model.PaymentMethod;
 import com.springboot.springboot.model.Order;
 import com.springboot.springboot.model.OrderDetail;
 import com.springboot.springboot.repository.InvoiceRepository;
@@ -20,8 +21,8 @@ public class StaffOrderController {
 
     // 1. Duyệt đơn hàng
     @PutMapping("/{orderId}/approve")
-    public Order approveOrder(@PathVariable int orderId) {
-        return staffOrderService.approveOrder(orderId);
+    public Order approveOrder(@PathVariable int orderId, @RequestParam PaymentMethod payment) {
+        return staffOrderService.approveOrder(orderId, payment);
     }
 
     // 2. Hủy đơn hàng
@@ -36,11 +37,6 @@ public class StaffOrderController {
         return staffOrderService.getOrderDetails(orderId);
     }
 
-    // 4. Tạo hóa đơn cho đơn hàng
-    @PostMapping("/{orderId}/invoice")
-    public void createInvoice(@PathVariable int orderId) {
-        staffOrderService.createInvoice(orderId);
-    }
 
     // 5. Lấy danh sách hóa đơn theo orderId
     @GetMapping("/{orderId}/invoices")
@@ -54,13 +50,20 @@ public class StaffOrderController {
         staffOrderService.updateInvoice(invoiceId, newOrderId);
     }
 
-    // 7. Xóa hóa đơn theo orderId
+    // 7. Cập nhật phương thức thanh toán cho hóa đơn
+    @PutMapping("/invoices/{invoiceId}/payment")
+    public void updatePaymentMethod(@PathVariable int invoiceId, @RequestParam PaymentMethod payment) {
+        staffOrderService.updatePaymentMethod(invoiceId, payment);
+    }
+
+
+    // 8. Xóa hóa đơn theo orderId
     @DeleteMapping("/{orderId}/invoices")
     public void deleteInvoicesByOrderId(@PathVariable int orderId) {
         staffOrderService.deleteInvoicesByOrderId(orderId);
     }
 
-    // 8. Lấy tất cả hóa đơn
+    // 9. Lấy tất cả hóa đơn
     @GetMapping("/invoices")
     public List<Invoice> getAllInvoices() {
         return staffOrderService.getAllInvoices();

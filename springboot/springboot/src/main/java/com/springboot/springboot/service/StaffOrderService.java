@@ -1,6 +1,7 @@
 package com.springboot.springboot.service;
 
 import com.springboot.springboot.model.Invoice;
+import com.springboot.springboot.model.PaymentMethod;
 import com.springboot.springboot.model.Order;
 import com.springboot.springboot.model.OrderDetail;
 import com.springboot.springboot.repository.OrderRepository;
@@ -24,7 +25,7 @@ public class StaffOrderService {
     private InvoiceRepository invoiceRepository;
 
     // Duyệt đơn (status = 1)
-    public Order approveOrder(int orderId) {
+    public Order approveOrder(int orderId, PaymentMethod payment) {
         Order order = orderRepository.findById(orderId);
         if (order == null) {
             throw new RuntimeException("Order not found");
@@ -34,7 +35,7 @@ public class StaffOrderService {
         orderRepository.save(order);
         
         //Tạo hóa đơn sau khi duyệt
-        invoiceRepository.createInvoice(orderId);
+        invoiceRepository.createInvoice(orderId, payment);
         return order;
     }
 
@@ -75,9 +76,9 @@ public class StaffOrderService {
         invoiceRepository.deleteInvoicesByOrderId(orderId);
     }
 
-    //Tạo hóa đơn
-    public void createInvoice(int orderId) {
-        invoiceRepository.createInvoice(orderId);
+    // Cập nhật phương thức thanh toán
+    public void updatePaymentMethod(int invoiceId, PaymentMethod payment) {
+        invoiceRepository.updatePaymentMethod(invoiceId, payment);
     }
    
 }
