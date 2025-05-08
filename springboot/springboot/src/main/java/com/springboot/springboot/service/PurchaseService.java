@@ -36,4 +36,9 @@ public class PurchaseService {
     public int deletePurchase(int id) {
         return purchaseRepository.delete(id);
     }
+
+    // Tìm kiếm phiếu nhập kho theo ID nhà cung cấp
+    public List<Purchase> findPurchasesBySupplierId(int supplierId) {
+        return purchaseRepository.findBySupplierId(supplierId);
+    }
 }
