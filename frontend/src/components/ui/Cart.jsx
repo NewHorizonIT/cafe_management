@@ -105,10 +105,7 @@ const Cart = ({ handleClose }) => {
         <div className="mt-4 font-bold">
           Tổng tiền:{" "}
           {cart.reduce(
-            (total, item) =>
-              total +
-              parseInt(item.price.replace(/[^0-9]/g, ""), 10) *
-                (item.quantity || 1),
+            (total, item) => total + (item.price * (item.quantity || 1) || 0),
             0
           )}{" "}
           VND

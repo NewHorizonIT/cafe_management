@@ -85,6 +85,10 @@ const router = createBrowserRouter([
         path: "stats",
         element: <CashierStats />,
       },
+      {
+        path: "login",
+        element: <LoginPage />,
+      },
     ],
   },
   {
@@ -115,6 +119,10 @@ const router = createBrowserRouter([
         path: "products",
         element: <ProductCRUD />,
       },
+      {
+        path: "login",
+        element: <LoginPage />,
+      },
     ],
   },
   {
@@ -136,6 +144,10 @@ const router = createBrowserRouter([
       {
         path: "bills",
         element: <BillHistory />,
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
       },
     ],
   },

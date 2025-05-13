@@ -2,13 +2,16 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NavLink } from "react-router-dom";
-import { ToggleTheme } from "../ui";
+import { NavLink, useNavigate } from "react-router-dom";
+import api from "@/api/api";
+import useAuthStore from "@/store/useAuthStore";
 
 const schemaRegister = z.object({
-  userName: z.string().min(4, "Ten toi thieu phai 4 ki tu"),
+  username: z.string().min(4, "Ten toi thieu phai 4 ki tu"),
   email: z.string().email("Email Khong hop le"),
   password: z.string().min(2, "Password phai tren 8 ki tu"),
+  phone: z.string().min(10, "So dien thoai phai co 10 so"),
+  address: z.string().min(5, "Dia chi phai co it nhat 5 ki"),
 });
 const FormRegister = () => {
   const {
@@ -19,8 +22,27 @@ const FormRegister = () => {
     resolver: zodResolver(schemaRegister),
   });
 
-  const handleRegister = (data) => {
-    console.log(data);
+  const { setData, setIsLogin } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleRegister = async (data) => {
+    data = {
+      ...data,
+      roleId: 1,
+      status: true,
+    };
+    try {
+      const res = await api.post("/users/register", data);
+      if (res.status === 200) {
+        alert("Đăng ký thành công");
+      }
+      setData(res.data);
+      setIsLogin(true);
+      navigate("/");
+    } catch (error) {
+      console.error("Error during registration:", error);
+      alert("Đăng ký thất bại");
+    }
   };
   return (
     <form
@@ -33,20 +55,20 @@ const FormRegister = () => {
       <div className="space-y-4">
         <div>
           <label
-            htmlFor="userName"
+            htmlFor="username"
             className="block text-sm font-medium text-base-content"
           >
             Username
           </label>
           <input
             type="text"
-            id="userName"
-            {...register("userName")}
+            id="username"
+            {...register("username")}
             className="mt-1 h-[40px] block w-full border border-base-content rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
           />
-          {errors.userName && (
+          {errors.username && (
             <p className="text-red-500 text-xs mt-1">
-              {errors.userName.message}
+              {errors.username.message}
             </p>
           )}
         </div>
@@ -84,6 +106,42 @@ const FormRegister = () => {
             <p className="text-red-500 text-xs mt-1">
               {errors.password.message}
             </p>
+          )}
+        </div>
+        <div>
+          <label
+            htmlFor="address"
+            className="block text-sm font-medium text-base-content"
+          >
+            Địa chỉ
+          </label>
+          <input
+            type="text"
+            id="address"
+            {...register("address")}
+            className="mt-1 h-[40px] block w-full border border-base-content rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+          />
+          {errors.address && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.address.message}
+            </p>
+          )}
+        </div>
+        <div>
+          <label
+            htmlFor="phon"
+            className="block text-sm font-medium text-base-content"
+          >
+            Số điện thoại
+          </label>
+          <input
+            type="text"
+            id="phone"
+            {...register("phone")}
+            className="mt-1 h-[40px] block w-full border border-base-content rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+          />
+          {errors.phone && (
+            <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
           )}
         </div>
       </div>

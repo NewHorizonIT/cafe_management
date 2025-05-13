@@ -10,7 +10,7 @@ const CardProduct = ({ thumbnail, name, createdAt, price, id }) => {
     <div className="card shadow-lg border-2 border-neutral-content bg-base-300">
       <figure>
         <img
-          src={thumbnail}
+          src={thumbnail ? thumbnail : "https://placehold.co/300x200"}
           alt="product"
           className="w-full h-48 object-cover"
         />

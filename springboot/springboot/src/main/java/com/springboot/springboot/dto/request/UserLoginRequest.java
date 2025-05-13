@@ -1,9 +1,14 @@
 package com.springboot.springboot.dto.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Data
@@ -13,25 +18,12 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreationRequest {
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
-    String username;
-
+public class UserLoginRequest {
     @NotBlank(message = "Email is required")
-    @Email(message = "Email must be valid")
+    @Size(min = 3, max = 50, message = "Email must be between 3 and 50 characters")
     String email;
-
-    @NotBlank(message = "Phone is required")
-    @Size(min = 10, max = 11, message = "Phone must be between 10 and 11 characters")
-    String phone;
 
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters")
     String password;
-
-    String address;
-
-    Integer roleId;
-
 }

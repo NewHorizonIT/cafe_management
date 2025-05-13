@@ -3,6 +3,7 @@ package com.springboot.springboot.controller;
 import com.springboot.springboot.dto.request.UserUpdateRequest;
 import com.springboot.springboot.dto.response.ApiResponse;
 import com.springboot.springboot.dto.request.UserCreationRequest;
+import com.springboot.springboot.dto.request.UserLoginRequest;
 import com.springboot.springboot.dto.response.UserResponse;
 import com.springboot.springboot.service.UserService;
 import jakarta.validation.Valid;
@@ -27,6 +28,17 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserResponse>> registerUser(@Valid @RequestBody UserCreationRequest request) {
         UserResponse userResponse = userService.createUser(request);
+        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
+                .code("200")
+                .message("Success")
+                .result(userResponse)
+                .build());
+    }
+
+    // Public login endpoint
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<UserResponse>> loginUser(@Valid @RequestBody UserLoginRequest request) {
+        UserResponse userResponse = userService.loginUser(request);
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
                 .code("200")
                 .message("Success")

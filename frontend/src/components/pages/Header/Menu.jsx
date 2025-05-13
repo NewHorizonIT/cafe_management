@@ -11,13 +11,13 @@ const Menu = ({ links }) => {
         <li key={link.id}>
           {link.sub ? (
             <details>
-              <summary className="text-lg">{link.lable}</summary>
+              <summary className="text-lg">{link.name}</summary>
               <ul className="p-2 min-w-24 bg-base-100">
                 <Menu links={link.sub} />
               </ul>
             </details>
           ) : (
-            <NavItem lable={link.lable} path={link.path} />
+            <NavItem lable={link.name} path={link.path || `/${link.name}`} />
           )}
         </li>
       ))}

@@ -2,8 +2,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { ToggleTheme } from "../ui";
+import api from "@/api/api";
+import useAuthStore from "@/store/useAuthStore";
 
 const schemaLogin = z.object({
   email: z.string().email("Email Khong hop le"),
@@ -19,9 +21,20 @@ const FormLogin = () => {
     resolver: zodResolver(schemaLogin),
   });
 
-  const handleLogin = (data) => {
-    console.log(data);
+  const { setData, setIsLogin } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleLogin = async (data) => {
+    try {
+      const res = await api.post("/users/login", data);
+      setData(res.data.result);
+      setIsLogin(true);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
   };
+
   return (
     <form
       onSubmit={handleSubmit(handleLogin)}

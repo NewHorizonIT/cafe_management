@@ -1,18 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "./Container";
 import Button from "@/components/ui/Button";
 import { Menu } from "@/components/pages/Header";
-import links from "@/constants/paths";
 import useAuthStore from "@/store/useAuthStore";
 import { Avatar, Input, ToggleTheme } from "../ui";
 import { CartIcon, SearchIcon } from "@/components/icons";
 import { NavLink } from "react-router-dom";
 import Cart from "../ui/Cart";
 import { motion, AnimatePresence } from "framer-motion";
+import useCategoryStore from "@/store/useCategoryStore";
 
 const Header = () => {
   const { isLogin } = useAuthStore();
   const [isCartVisible, setIsCartVisible] = useState(false);
+  const { categories, fetchCategories } = useCategoryStore();
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const links = [
+    {
+      id: 1,
+      name: "Trang chủ",
+      path: "/",
+    },
+    {
+      id: 2,
+      name: "Giới thiệu",
+      path: "/about",
+    },
+    {
+      id: 3,
+      name: "Danh mục",
+      path: "/",
+      sub: [...categories],
+    },
+  ];
 
   const toggleCartVisibility = () => {
     setIsCartVisible(!isCartVisible);

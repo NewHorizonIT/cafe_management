@@ -1,6 +1,7 @@
 package com.springboot.springboot.service;
 
 import com.springboot.springboot.dto.request.UserCreationRequest;
+import com.springboot.springboot.dto.request.UserLoginRequest;
 import com.springboot.springboot.dto.request.UserUpdateRequest;
 import com.springboot.springboot.dto.response.UserResponse;
 import com.springboot.springboot.entity.User;
@@ -24,9 +25,9 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationService authenticationService;
 
-
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, SecurityFilterChain jwtSecurityFilterChain, AuthenticationService authenticationService) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder,
+            SecurityFilterChain jwtSecurityFilterChain, AuthenticationService authenticationService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -48,7 +49,7 @@ public class UserService {
         return mapToUserResponse(user);
     }
 
-       // Create
+    // Create
     public UserResponse createUser(UserCreationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username already exists");
@@ -65,27 +66,36 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-<<<<<<< HEAD
         user.setAddress(request.getAddress());
         user.setStatus("true");
-        user.setAddress(request.getAddress());
-=======
-        user.setStatus("true");
->>>>>>> 1c741eb (feat:fix order)
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
-
 
         int roleId = request.getRoleId() != null
                 ? request.getRoleId()
                 : 1;
 
-        user = userRepository.save(user,roleId);
+        user = userRepository.save(user, roleId);
 
-//        Tạo Token khi tạo user
+        // Tạo Token khi tạo user
         String token = authenticationService.generateToken(user);
 
-        return mapToCreateUserResponse(user,roleId,token);
+        return mapToCreateUserResponse(user, roleId, token);
+    }
+
+    // Login
+    public UserResponse loginUser(UserLoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + request.getEmail()));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        // Tạo Token khi đăng nhập
+        String token = authenticationService.generateToken(user);
+
+        return mapToCreateUserResponse(user, user.getId(), token);
     }
 
     // Read (lấy tất cả người dùng)
@@ -128,7 +138,7 @@ public class UserService {
         }
 
         if (request.getAddress() != null && !request.getAddress().equals(user.getAddress())) {
-           user.setAddress(request.getAddress());
+            user.setAddress(request.getAddress());
         }
 
         user.setUpdatedAt(LocalDateTime.now());
@@ -170,7 +180,7 @@ public class UserService {
     }
 
     // Helper method: Chuyển entity thành DTO
-    private UserResponse mapToUserResponse(User user ){
+    private UserResponse mapToUserResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -181,7 +191,8 @@ public class UserService {
                 .updatedAt(user.getUpdatedAt())
                 .build();
     }
-    private UserResponse mapToCreateUserResponse(User user,int id, String token){
+
+    private UserResponse mapToCreateUserResponse(User user, int id, String token) {
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())

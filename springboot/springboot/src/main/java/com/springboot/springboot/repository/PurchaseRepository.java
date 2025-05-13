@@ -16,21 +16,22 @@ public class PurchaseRepository {
 
     private RowMapper<Purchase> purchaseRowMapper = (rs, rowNum) -> {
         Purchase purchase = new Purchase();
-        purchase.setPurchaseId(rs.getInt("purchase_id"));
+        purchase.setPurchaseId(rs.getInt("id"));
         purchase.setDate(rs.getTimestamp("date").toLocalDateTime());
         purchase.setTotal(rs.getInt("total"));
-        purchase.setStatus(rs.getInt("status"));
+        purchase.setStatus(rs.getString("status"));
         purchase.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
         purchase.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
         purchase.setSupplierId(rs.getInt("supplier_id"));
-        purchase.setStaffId(rs.getInt("staff_id"));
+        purchase.setStaffId(rs.getInt("user_id"));
         return purchase;
     };
 
     // Tạo phiếu nhập kho mới
     public int save(Purchase purchase) {
         String sql = "INSERT INTO purchase (date, total, status, created_at, updated_at, supplier_id, staff_id) VALUES (?, ?, ?, NOW(), NOW(), ?, ?)";
-        return jdbcTemplate.update(sql, purchase.getDate(), purchase.getTotal(), purchase.getStatus(), purchase.getSupplierId(), purchase.getStaffId());
+        return jdbcTemplate.update(sql, purchase.getDate(), purchase.getTotal(), purchase.getStatus(),
+                purchase.getSupplierId(), purchase.getStaffId());
     }
 
     // Lấy danh sách phiếu nhập kho
@@ -48,7 +49,8 @@ public class PurchaseRepository {
     // Cập nhật phiếu nhập kho
     public int update(Purchase purchase) {
         String sql = "UPDATE purchase SET date = ?, total = ?, status = ?, updated_at = NOW(), supplier_id = ?, staff_id = ? WHERE purchase_id = ?";
-        return jdbcTemplate.update(sql, purchase.getDate(), purchase.getTotal(), purchase.getStatus(), purchase.getSupplierId(), purchase.getStaffId(), purchase.getPurchaseId());
+        return jdbcTemplate.update(sql, purchase.getDate(), purchase.getTotal(), purchase.getStatus(),
+                purchase.getSupplierId(), purchase.getStaffId(), purchase.getPurchaseId());
     }
 
     // Xóa phiếu nhập kho

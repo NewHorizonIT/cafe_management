@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,13 @@ public class RoleRepository {
     public Role save(Role role) {
         String sql = "INSERT INTO roles (role, created_at, updated_at) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        if (role.getCreatedAt() == null) {
+            role.setCreatedAt(LocalDateTime.now());
+        }
+        if (role.getUpdatedAt() == null) {
+            role.setUpdatedAt(LocalDateTime.now());
+        }
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[] { "id" });
@@ -80,8 +88,6 @@ public class RoleRepository {
                 Timestamp.valueOf(role.getUpdatedAt()),
                 role.getId());
     }
-
-
 
     // Delete
     public void deleteById(int id) {

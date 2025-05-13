@@ -42,7 +42,7 @@ public class UserRepository {
     // Create
     public User save(User user, int roleId) {
         // SQL để chèn user vào bảng users
-        String sql = "INSERT INTO users (username, email, phone, password, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, email, phone, address, password, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         // Chèn user vào bảng users
@@ -51,10 +51,11 @@ public class UserRepository {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPhone());
-            ps.setString(4, user.getPassword());
-            ps.setString(5, user.getStatus());
-            ps.setTimestamp(6, Timestamp.valueOf(user.getCreatedAt()));
-            ps.setTimestamp(7, Timestamp.valueOf(user.getUpdatedAt()));
+            ps.setString(4, user.getAddress());
+            ps.setString(5, user.getPassword());
+            ps.setString(6, user.getStatus());
+            ps.setTimestamp(7, Timestamp.valueOf(user.getCreatedAt()));
+            ps.setTimestamp(8, Timestamp.valueOf(user.getUpdatedAt()));
             return ps;
         }, keyHolder);
 
@@ -68,7 +69,6 @@ public class UserRepository {
 
         return user;
     }
-
 
     // Read (lấy tất cả người dùng)
     public List<User> findAll() {
@@ -126,6 +126,13 @@ public class UserRepository {
     public Optional<User> findByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = ?";
         List<User> users = jdbcTemplate.query(sql, userRowMapper, username);
+        return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
+    }
+
+    // Tìm người dùng theo email
+    public Optional<User> findByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        List<User> users = jdbcTemplate.query(sql, userRowMapper, email);
         return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
     }
 

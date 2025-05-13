@@ -7,7 +7,9 @@ const ListProduct = ({ products = [] }) => {
       {products.length > 0 ? (
         products.map((product, i) => <CardProduct key={i} {...product} />)
       ) : (
-        <h1>Load error</h1>
+        <div className="col-span-3 text-center">
+          <p className="text-xl font-semibold">Không có sản phẩm nào</p>
+        </div>
       )}
     </div>
   );
