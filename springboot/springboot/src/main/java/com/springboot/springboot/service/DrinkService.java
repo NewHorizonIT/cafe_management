@@ -44,6 +44,11 @@ public class DrinkService {
         return drinkRepository.save(drink);
     }
 
+    // Lưu sản phẩm (thêm mới hoặc cập nhật)
+    public int saveDrink(Drink drink) {
+        return drinkRepository.save(drink);
+    }
+
     // Cập nhật sản phẩm
     public int updateDrink(Drink drink) {
         return drinkRepository.update(drink);

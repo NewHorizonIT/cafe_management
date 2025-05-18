@@ -8,15 +8,11 @@ import com.nimbusds.jwt.SignedJWT;
 
 import com.springboot.springboot.dto.request.AuthenticationRequest;
 import com.springboot.springboot.dto.request.IntrospectRequest;
-import com.springboot.springboot.dto.request.LogoutRequest;
-import com.springboot.springboot.dto.request.RefreshRequest;
 import com.springboot.springboot.dto.response.AuthenticationResponse;
 import com.springboot.springboot.dto.response.IntrospectResponse;
-import com.springboot.springboot.entity.InvalidatedToken;
 import com.springboot.springboot.entity.User;
 import com.springboot.springboot.exception.AppException;
 import com.springboot.springboot.exception.ErrorCode;
-//import com.springboot.springboot.repository.InvalidatedTokenRepository;
 import com.springboot.springboot.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,6 +53,7 @@ public class AuthenticationService {
             verifyToken(token, false);
         } catch (AppException e) {
             isValid = false;
+            log.warn("Token introspection failed: {}", e.getMessage());
         }
 
         return IntrospectResponse.builder().valid(isValid).build();
@@ -64,62 +61,28 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        log.debug("Attempting authentication for username: {}", request.getUsername());
+
         var user = userRepository
                 .findByUsername(request.getUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> {
+                    log.error("User not found with username: {}", request.getUsername());
+                    return new AppException(ErrorCode.USER_NOT_EXISTED);
+                });
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
-
-        if (!authenticated)
+        if (!authenticated) {
+            log.error("Authentication failed for username: {} - Invalid password", request.getUsername());
             throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
 
+        log.info("Authentication successful for username: {}", request.getUsername());
         var token = generateToken(user);
 
         return AuthenticationResponse.builder()
                 .token(token)
                 .build();
     }
-
-//    public void logout(LogoutRequest request) throws ParseException, JOSEException {
-//        try {
-//            var signToken = verifyToken(request.getToken(), true);
-//
-//            String jit = signToken.getJWTClaimsSet().getJWTID();
-//            Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
-//
-//            InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-//                    .id(jit)
-//                    .expiryTime(expiryTime)
-//                    .build();
-//
-//            invalidatedTokenRepository.save(invalidatedToken);
-//        } catch (AppException exception) {
-//            log.info("Token already expired");
-//        }
-//    }
-//
-//    public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
-//        var signedJWT = verifyToken(request.getToken(), true);
-//
-//        var jit = signedJWT.getJWTClaimsSet().getJWTID();
-//        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-//
-//        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-//                .id(jit)
-//                .expiryTime(expiryTime)
-//                .build();
-//
-//        invalidatedTokenRepository.save(invalidatedToken);
-//
-//        var username = signedJWT.getJWTClaimsSet().getSubject();
-//
-//        var user = userRepository.findByUsername(username)
-//                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
-//
-//        var token = generateToken(user);
-//
-//        return AuthenticationResponse.builder().token(token).authenticated(true).build();
-//    }
 
     public String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
@@ -139,10 +102,12 @@ public class AuthenticationService {
 
         try {
             jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
-            return jwsObject.serialize();
+            String token = jwsObject.serialize();
+            log.info("Generated JWT token for user: {}", user.getUsername());
+            return token;
         } catch (JOSEException e) {
-            log.error("Cannot create token", e);
-            throw new RuntimeException(e);
+            log.error("Cannot create token for user {}: {}", user.getUsername(), e.getMessage(), e);
+            throw new RuntimeException("Failed to generate token", e);
         }
     }
 
@@ -162,10 +127,12 @@ public class AuthenticationService {
 
         var verified = signedJWT.verify(verifier);
 
-        if (!(verified && expiryTime.after(new Date())))
+        if (!(verified && expiryTime.after(new Date()))) {
+            log.error("Token verification failed: verified={}, expiryTime={}", verified, expiryTime);
             throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
 
-
+        log.debug("Token verified successfully");
         return signedJWT;
     }
 
@@ -174,7 +141,7 @@ public class AuthenticationService {
 
         Map<String, List<String>> rolesAndPermissions = userRepository.findRolesAndPermissionsByUserId(user.getId());
 
-        List<String> roles = rolesAndPermissions.getOrDefault("role", Collections.emptyList());
+        List<String> roles = rolesAndPermissions.getOrDefault("roles", Collections.emptyList());
         List<String> permissions = rolesAndPermissions.getOrDefault("role_permissions", Collections.emptyList());
 
         if (!CollectionUtils.isEmpty(roles)) {
@@ -185,6 +152,8 @@ public class AuthenticationService {
             permissions.forEach(stringJoiner::add);
         }
 
-        return stringJoiner.toString();
+        String scope = stringJoiner.toString();
+        log.debug("Built scope for user {}: {}", user.getUsername(), scope);
+        return scope;
     }
 }
